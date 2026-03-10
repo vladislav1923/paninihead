@@ -1,6 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { useActionState } from "react";
+import { createCollection, type CreateCollectionState } from "@/lib/actions/collections";
+import { CollectionForm } from "@/lib/components/forms/CollectionForm";
+import { Button } from "@/lib/components/ui/button";
+
+const initialState: CreateCollectionState = {};
 
 export default function NewCollectionPage() {
+  const [state, formAction] = useActionState(createCollection, initialState);
+  const errors = state?.errors ?? {};
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border px-6 py-4">
@@ -18,9 +29,15 @@ export default function NewCollectionPage() {
         <h1 className="mb-6 text-xl font-semibold text-foreground">
           New collection
         </h1>
-        <p className="text-muted-foreground">
-          Form to create a new collection can be added here.
-        </p>
+        <form action={formAction} className="flex flex-col gap-6">
+          <CollectionForm errors={errors} />
+          <div className="flex gap-3">
+            <Button type="submit">Create collection</Button>
+            <Button type="reset" variant="outline">
+              Reset
+            </Button>
+          </div>
+        </form>
       </main>
     </div>
   );

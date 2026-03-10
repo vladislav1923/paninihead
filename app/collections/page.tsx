@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { db } from "@/lib/db";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/lib/components/ui/card";
 
 export default async function CollectionsPage() {
   const collections = await db.collections.findMany({
