@@ -11,6 +11,12 @@ export type CreateCollectionState = {
     imageUrl?: string;
     total?: string;
   };
+  /** Submitted values when validation fails, so the form can re-display them */
+  values?: {
+    name: string;
+    imageUrl: string;
+    total: string;
+  };
 };
 
 function formDataToValues(formData: FormData) {
@@ -31,7 +37,14 @@ export async function createCollection(
 
   const result = validateFormSchema(createCollectionSchema, raw);
   if (!result.ok) {
-    return { errors: result.errors };
+    return {
+      errors: result.errors,
+      values: {
+        name: raw.name,
+        imageUrl: raw.imageUrl,
+        total: raw.total !== undefined && raw.total !== null ? String(raw.total) : "",
+      },
+    };
   }
   const data = result.data;
 

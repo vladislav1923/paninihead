@@ -11,6 +11,13 @@ import { Label } from "@/lib/components/ui/label";
 
 export type CollectionFormCollection = Pick<Collections, "name" | "imageUrl" | "total">;
 
+/** Same shape as CollectionFormCollection but total may be string (e.g. from failed submit) */
+export type CollectionFormValues = {
+  name: string;
+  imageUrl?: string | null;
+  total: number | string;
+};
+
 export type CollectionFormErrors = {
   name?: string;
   imageUrl?: string;
@@ -19,7 +26,7 @@ export type CollectionFormErrors = {
 
 type CollectionFormProps = {
   errors?: CollectionFormErrors;
-  collection?: CollectionFormCollection | null;
+  collection?: CollectionFormValues | null;
 };
 
 export function CollectionForm({

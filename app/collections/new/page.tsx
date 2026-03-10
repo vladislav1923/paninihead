@@ -29,8 +29,12 @@ export default function NewCollectionPage() {
         <h1 className="mb-6 text-xl font-semibold text-foreground">
           New collection
         </h1>
-        <form action={formAction} className="flex flex-col gap-6">
-          <CollectionForm errors={errors} />
+        <form action={formAction} className="flex flex-col gap-6" noValidate>
+          <CollectionForm
+            key={state?.values ? JSON.stringify(state.values) : "new"}
+            errors={errors}
+            collection={state?.values}
+          />
           <div className="flex gap-3">
             <Button type="submit">Create collection</Button>
             <Button type="reset" variant="outline">
