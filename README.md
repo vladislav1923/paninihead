@@ -1,5 +1,41 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Database
+
+The project uses PostgreSQL with Prisma. The database runs in Docker.
+
+### Start the database
+
+```bash
+docker compose up -d
+```
+
+This starts PostgreSQL 16 on port **6000** with:
+
+- **User:** `user`
+- **Password:** `password`
+- **Database:** `paninihead`
+
+### Stop the database
+
+```bash
+docker compose down
+```
+
+### Environment
+
+Create a `.env` file in the project root (copy `env.example`)
+
+### Migrations
+
+| Task | Command |
+|------|--------|
+| Create a new migration (after changing `prisma/schema.prisma`) and apply it | `npx prisma migrate dev` |
+| Apply existing migrations only (e.g. in CI or after pulling new migrations) | `npx prisma migrate deploy` |
+| Check migration status | `npx prisma migrate status` |
+
+Run `npx prisma migrate dev` when you change the schema; run `npx prisma migrate deploy` when you only need to run migrations that are already in the repo.
+
 ## Getting Started
 
 First, run the development server:
