@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CollectionStatus } from "@/app/generated/prisma/enums";
 import { db } from "@/lib/db";
-import { Card, CardHeader, CardTitle } from "@/lib/components/ui/card";
+import { CollectedForm } from "@/lib/components/forms/CollectedForm";
+import { Badge } from "@/lib/components/ui/badge";
 
 export default async function CollectionPage({
   params,
@@ -27,8 +29,8 @@ export default async function CollectionPage({
       </header>
 
       <main className="mx-auto max-w-2xl px-6 py-8">
-        <Card>
-          <div className="aspect-video w-full bg-muted">
+        <div className="mb-8">
+          <div className="mb-4 aspect-video w-full overflow-hidden rounded-lg bg-muted">
             {collection.imageUrl ? (
               <img
                 src={collection.imageUrl}
@@ -40,17 +42,34 @@ export default async function CollectionPage({
                 className="flex size-full items-center justify-center text-muted-foreground"
                 aria-hidden
               >
-                No image
+                <span className="text-sm">No image</span>
               </div>
             )}
           </div>
-          <CardHeader>
-            <CardTitle className="text-xl">{collection.name}</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              {collection.collected.length} / {collection.total} collected
-            </p>
-          </CardHeader>
-        </Card>
+          <div className="flex flex-wrap items-center gap-2">
+            <h1 className="text-xl font-semibold text-foreground">
+              {collection.name}
+            </h1>
+            <Badge
+              text={
+                collection.status === CollectionStatus.Completed
+                  ? "COMPLETED"
+                  : "IN PROGRESS"
+              }
+              variant={
+                collection.status === CollectionStatus.Completed
+                  ? "green"
+                  : "orange"
+              }
+            />
+          </div>
+        </div>
+
+        <CollectedForm
+          collectionId={collection.id}
+          total={collection.total}
+          initialCollected={collection.collected}
+        />
       </main>
     </div>
   );

@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { CollectionStatus } from "@/app/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { createCollectionSchema } from "@/lib/schemas/collection";
 import { validateFormSchema } from "@/lib/utilities/validation";
@@ -58,4 +59,20 @@ export async function createCollection(
   });
 
   redirect("/collections");
+}
+
+export async function updateCollected(
+  collectionId: string,
+  collected: number[],
+  total: number
+) {
+  const isCompleted = collected.length === total;
+  await db.collections.update({
+    where: { id: collectionId },
+    data: {
+      collected,
+      status: isCompleted ? CollectionStatus.Completed : CollectionStatus.InProgress,
+      completedAt: isCompleted ? new Date() : null,
+    },
+  });
 }

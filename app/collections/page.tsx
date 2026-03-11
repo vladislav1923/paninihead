@@ -1,6 +1,13 @@
 import Link from "next/link";
+import { CollectionStatus } from "@/app/generated/prisma/enums";
 import { db } from "@/lib/db";
-import { Card, CardHeader, CardTitle } from "@/lib/components/ui/card";
+import { Badge } from "@/lib/components/ui/badge";
+
+function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+  }).format(date);
+}
 
 export default async function CollectionsPage() {
   const collections = await db.collections.findMany({
@@ -23,33 +30,51 @@ export default async function CollectionsPage() {
           </Link>
         </div>
 
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="flex flex-col gap-6">
           {collections.map((collection) => (
             <li key={collection.id}>
-              <Link href={`/collections/${collection.id}`} className="block">
-                <Card className="overflow-hidden transition-shadow hover:shadow-md">
-                  <div className="aspect-[4/3] w-full bg-muted">
-                    {collection.imageUrl ? (
-                      <img
-                        src={collection.imageUrl}
-                        alt=""
-                        className="size-full object-cover"
-                      />
-                    ) : (
-                      <div
-                        className="flex size-full items-center justify-center text-muted-foreground"
-                        aria-hidden
-                      >
-                        No image
-                      </div>
-                    )}
-                  </div>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base">
+              <Link
+                href={`/collections/${collection.id}`}
+                className="flex flex-wrap items-center gap-4 rounded-lg border border-border bg-background p-4 transition-colors hover:bg-muted/50"
+              >
+                <div className="size-16 shrink-0 overflow-hidden rounded-md bg-muted">
+                  {collection.imageUrl ? (
+                    <img
+                      src={collection.imageUrl}
+                      alt=""
+                      className="size-full object-cover"
+                    />
+                  ) : (
+                    <div
+                      className="flex size-full items-center justify-center text-muted-foreground"
+                      aria-hidden
+                    >
+                      <span className="text-xs">No image</span>
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="font-medium text-foreground">
                       {collection.name}
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
+                    </h2>
+                    <Badge
+                      text={
+                        collection.status === CollectionStatus.Completed
+                          ? "COMPLETED"
+                          : "IN PROGRESS"
+                      }
+                      variant={
+                        collection.status === CollectionStatus.Completed
+                          ? "green"
+                          : "orange"
+                      }
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {formatDate(collection.createdAt)}
+                  </p>
+                </div>
               </Link>
             </li>
           ))}
