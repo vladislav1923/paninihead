@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CollectionStatus } from "@/app/generated/prisma/enums";
+import { CollectionStatus } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { CollectedForm } from "@/lib/components/forms/CollectedForm";
 import { Badge } from "@/lib/components/ui/badge";

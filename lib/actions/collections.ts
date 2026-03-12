@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { CollectionStatus } from "@/app/generated/prisma/enums";
+import { CollectionStatus } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { createCollectionSchema } from "@/lib/schemas/collection";
 import { validateFormSchema } from "@/lib/utilities/validation";

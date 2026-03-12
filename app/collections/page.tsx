@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CollectionStatus } from "@/app/generated/prisma/enums";
+import { CollectionStatus } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { Badge } from "@/lib/components/ui/badge";
 

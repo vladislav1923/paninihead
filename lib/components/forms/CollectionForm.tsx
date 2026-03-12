@@ -1,6 +1,6 @@
 "use client";
 
-import type { Collections } from "@/app/generated/prisma/client";
+import type { Collections } from "@/generated/prisma/client";
 import {
   NAME_MAX,
   IMAGE_URL_MAX,
