@@ -1,4 +1,5 @@
 import { cn } from "@/lib/components/utils";
+import { Button } from "@/lib/components/ui/button";
 
 type CollectedPreviewProps = {
   collected: number[];
@@ -12,10 +13,20 @@ export function CollectedPreview({ collected, total }: CollectedPreviewProps) {
   const collectedSet = new Set(collected);
 
   return (
-    <div className="mb-4">
-      <p className="mb-2 text-sm text-muted-foreground">
-        {collected.length} / {total} collected
-      </p>
+    <div>
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <p className="text-sm text-muted-foreground">
+          {collected.length} / {total} collected
+        </p>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="bg-black !text-white hover:bg-black/90 dark:bg-black dark:!text-white dark:hover:bg-black/90"
+        >
+          Add Stickers
+        </Button>
+      </div>
       <div
         className="grid"
         style={{
