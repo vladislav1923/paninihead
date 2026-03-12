@@ -1,12 +1,24 @@
+"use client";
+
+import { useState } from "react";
 import { cn } from "@/lib/components/utils";
 import { Button } from "@/lib/components/ui/button";
+import { Dialog } from "@/lib/components/ui/Dialog";
+import { CollectedForm } from "@/lib/components/forms/CollectedForm";
 
 type CollectedPreviewProps = {
+  collectionId: string;
   collected: number[];
   total: number;
 };
 
-export function CollectedPreview({ collected, total }: CollectedPreviewProps) {
+export function CollectedPreview({
+  collectionId,
+  collected,
+  total,
+}: CollectedPreviewProps) {
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   if (total < 1) return null;
 
   const numbers = Array.from({ length: total }, (_, i) => i + 1);
@@ -23,6 +35,7 @@ export function CollectedPreview({ collected, total }: CollectedPreviewProps) {
           variant="outline"
           size="sm"
           className="bg-black !text-white hover:bg-black/90 dark:bg-black dark:!text-white dark:hover:bg-black/90"
+          onClick={() => setDialogOpen(true)}
         >
           Add Stickers
         </Button>
@@ -47,6 +60,19 @@ export function CollectedPreview({ collected, total }: CollectedPreviewProps) {
           </div>
         ))}
       </div>
+
+      <Dialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title="Add Stickers"
+        fullScreen
+      >
+        <CollectedForm
+          collectionId={collectionId}
+          total={total}
+          initialCollected={collected}
+        />
+      </Dialog>
     </div>
   );
 }

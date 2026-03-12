@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 import { cn } from "@/lib/components/utils";
+import { Button } from "@/lib/components/ui/button";
 
 type DialogProps = {
   open: boolean;
@@ -10,6 +12,7 @@ type DialogProps = {
   title: string;
   children: React.ReactNode;
   className?: string;
+  fullScreen?: boolean;
 };
 
 export function Dialog({
@@ -18,6 +21,7 @@ export function Dialog({
   title,
   children,
   className,
+  fullScreen = false,
 }: DialogProps) {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
@@ -40,7 +44,10 @@ export function Dialog({
 
   const content = (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className={cn(
+        "fixed inset-0 z-50",
+        !fullScreen && "flex items-center justify-center p-4"
+      )}
       onKeyDown={handleKeyDown}
     >
       <div
@@ -53,18 +60,41 @@ export function Dialog({
         aria-modal
         aria-labelledby="dialog-title"
         className={cn(
-          "relative z-50 w-full max-w-lg rounded-xl border border-border bg-background p-6 shadow-lg",
+          "z-50 flex flex-col bg-background",
+          fullScreen
+            ? "fixed inset-4 overflow-hidden rounded-xl border border-border shadow-lg"
+            : "relative w-full max-w-lg rounded-xl border border-border p-6 shadow-lg",
+          !fullScreen && "p-6",
           className
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2
-          id="dialog-title"
-          className="mb-4 text-lg font-semibold text-foreground"
+        <div
+          className={cn(
+            "flex shrink-0 items-center justify-between border-b border-border",
+            fullScreen ? "px-6 py-4" : "mb-4"
+          )}
         >
-          {title}
-        </h2>
-        {children}
+          <h2
+            id="dialog-title"
+            className="font-semibold text-foreground text-lg"
+          >
+            {title}
+          </h2>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="size-8 shrink-0"
+            onClick={() => onOpenChange(false)}
+            aria-label="Close"
+          >
+            <X className="size-4" aria-hidden />
+          </Button>
+        </div>
+        <div className={cn(fullScreen && "flex min-h-0 flex-1 flex-col overflow-hidden px-6 pb-6")}>
+          {children}
+        </div>
       </div>
     </div>
   );

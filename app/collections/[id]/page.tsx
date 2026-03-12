@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { CollectionStatus } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { CollectedPreview } from "@/lib/components/CollectedPreview";
-import { CollectedForm } from "@/lib/components/forms/CollectedForm";
 import { Badge } from "@/lib/components/ui/badge";
 import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
 
@@ -55,15 +54,11 @@ export default async function CollectionPage({
         </div>
 
         <div className="grid grid-cols-1 gap-8 min-[900px]:grid-cols-2">
-          <section className="flex min-h-[60vh] min-w-0 flex-col min-[900px]:min-h-[calc(100vh-8rem)]">
+          <section className="min-w-0">
             <CollectedPreview
+              collectionId={collection.id}
               collected={collection.collected}
               total={collection.total}
-            />
-            <CollectedForm
-              collectionId={collection.id}
-              total={collection.total}
-              initialCollected={collection.collected}
             />
           </section>
 
