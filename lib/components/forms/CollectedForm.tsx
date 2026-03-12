@@ -10,6 +10,7 @@ type CollectedFormProps = {
   collectionId: string;
   total: number;
   initialCollected: number[];
+  onSaved?: () => void;
 };
 
 function collectedToCounts(arr: number[]): Map<number, number> {
@@ -38,14 +39,20 @@ type CellProps = {
 
 const Cell = memo(function Cell({ n, count, onIncrement, onDecrement }: CellProps) {
   const isCollected = count > 0;
+  const greenLevel =
+    count >= 3
+      ? "bg-green-500/50 text-green-800 dark:bg-green-500/55 dark:text-green-200"
+      : count >= 2
+        ? "bg-green-500/35 text-green-700 dark:bg-green-500/45 dark:text-green-300"
+        : count >= 1
+          ? "bg-green-500/20 text-green-700 dark:bg-green-500/30 dark:text-green-300"
+          : null;
   return (
     <div className="min-h-0 w-full min-w-0 [aspect-ratio:1]">
       <div
         className={cn(
           "relative h-full w-full min-h-0 min-w-0 overflow-hidden rounded-md p-0.5 tabular-nums",
-          isCollected
-            ? "bg-green-500/20 text-green-700 dark:bg-green-500/30 dark:text-green-300"
-            : "bg-muted/60 text-muted-foreground"
+          greenLevel ?? "bg-muted/60 text-muted-foreground"
         )}
       >
         <span className="absolute inset-0 flex items-center justify-center text-lg font-bold leading-none -translate-y-[5px]">
@@ -82,6 +89,7 @@ export function CollectedForm({
   collectionId,
   total,
   initialCollected,
+  onSaved,
 }: CollectedFormProps) {
   const initialCounts = useMemo(
     () => collectedToCounts(initialCollected),
@@ -145,10 +153,11 @@ export function CollectedForm({
     setIsSaving(true);
     try {
       await updateCollected(collectionId, collected, total);
+      onSaved?.();
     } finally {
       setIsSaving(false);
     }
-  }, [collectionId, collected, total]);
+  }, [collectionId, collected, total, onSaved]);
 
   if (total < 1) return null;
 

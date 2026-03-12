@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/components/utils";
 import { Button } from "@/lib/components/ui/button";
@@ -17,6 +18,7 @@ export function CollectedPreview({
   collected,
   total,
 }: CollectedPreviewProps) {
+  const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
 
   if (total < 1) return null;
@@ -71,6 +73,10 @@ export function CollectedPreview({
           collectionId={collectionId}
           total={total}
           initialCollected={collected}
+          onSaved={() => {
+          setDialogOpen(false);
+          router.refresh();
+        }}
         />
       </Dialog>
     </div>
