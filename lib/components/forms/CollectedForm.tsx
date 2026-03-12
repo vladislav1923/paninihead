@@ -49,35 +49,39 @@ export function CollectedForm({
   const numbers = Array.from({ length: total }, (_, i) => i + 1);
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="text-sm text-muted-foreground">
-        {collected.length} / {total} collected
-      </p>
-      <div className="grid grid-cols-8 gap-x-.5 gap-y-4 sm:grid-cols-10 md:grid-cols-12">
-        {numbers.map((n) => (
-          <RoundedButton
-            key={n}
-            pressed={collected.includes(n)}
-            onClick={() => toggle(n)}
-            aria-label={
-              collected.includes(n)
-                ? `Sticker ${n} collected`
-                : `Sticker ${n} not collected`
-            }
-          >
-            {n}
-          </RoundedButton>
-        ))}
+    <div className="flex min-h-0 flex-1 flex-col gap-4">
+      <div className="min-h-0 overflow-auto">
+        <p className="text-sm text-muted-foreground">
+          {collected.length} / {total} collected
+        </p>
+        <div className="mt-4 grid grid-cols-8 gap-x-.5 gap-y-4 sm:grid-cols-10 md:grid-cols-12">
+          {numbers.map((n) => (
+            <RoundedButton
+              key={n}
+              pressed={collected.includes(n)}
+              onClick={() => toggle(n)}
+              aria-label={
+                collected.includes(n)
+                  ? `Sticker ${n} collected`
+                  : `Sticker ${n} not collected`
+              }
+            >
+              {n}
+            </RoundedButton>
+          ))}
+        </div>
       </div>
       {hasChanges && (
-        <Button
-          type="button"
-          onClick={handleSave}
-          disabled={isSaving}
-          className="w-fit"
-        >
-          {isSaving ? "Saving…" : "Save"}
-        </Button>
+        <div className="sticky bottom-0 mt-auto shrink-0 border-t border-border bg-background pt-4">
+          <Button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving}
+            className="w-fit"
+          >
+            {isSaving ? "Saving…" : "Save"}
+          </Button>
+        </div>
       )}
     </div>
   );
