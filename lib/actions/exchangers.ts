@@ -30,3 +30,26 @@ export async function createExchanger(
   revalidatePath(`/collections/${collectionId}`);
   return { ok: true };
 }
+
+export async function updateExchanger(
+  collectionId: string,
+  exchangerId: string,
+  raw: unknown
+): Promise<Result> {
+  const validated = validateFormSchema(addExchangerSchema, raw);
+  if (!validated.ok) return { ok: false, errors: validated.errors };
+
+  const { name, link, has, needs } = validated.data;
+  await db.exchangers.update({
+    where: { id: exchangerId, collectionId },
+    data: {
+      name,
+      link,
+      has: parseCommaSeparatedNumbers(has ?? ""),
+      needs: parseCommaSeparatedNumbers(needs ?? ""),
+    },
+  });
+
+  revalidatePath(`/collections/${collectionId}`);
+  return { ok: true };
+}

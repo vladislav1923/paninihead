@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createExchanger } from "@/lib/actions/exchangers";
+import { createExchanger, updateExchanger } from "@/lib/actions/exchangers";
 import { addExchangerSchema, type AddExchangerFormValues } from "@/lib/schemas/exchanger";
 import { Button } from "@/lib/components/ui/button";
 import { Input } from "@/lib/components/ui/input";
@@ -12,7 +12,18 @@ import { cn } from "@/lib/components/utils";
 const textareaClassName =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30";
 
-const defaultValues: AddExchangerFormValues = {
+function formatNumbersText(text: string): string {
+  if (!text.trim()) return "";
+  // 1. Remove content in parenthesis
+  let s = text.replace(/\([^)]*\)/g, "");
+  // 2. Remove all symbols that are not numbers or commas
+  s = s.replace(/[^0-9,]/g, "");
+  // 3. Normalize: split by comma, drop empty, join with single comma
+  const parts = s.split(",").filter((p) => p.length > 0);
+  return parts.join(",");
+}
+
+const emptyDefaultValues: AddExchangerFormValues = {
   name: "",
   link: "",
   has: "",
@@ -21,30 +32,43 @@ const defaultValues: AddExchangerFormValues = {
 
 type AddExchangerFormProps = {
   collectionId: string;
+  exchangerId?: string;
+  defaultValues?: Partial<AddExchangerFormValues>;
   onSuccess?: () => void;
   onCancel?: () => void;
 };
 
 export function AddExchangerForm({
   collectionId,
+  exchangerId,
+  defaultValues: defaultValuesProp,
   onSuccess,
   onCancel,
 }: AddExchangerFormProps) {
+  const formDefaultValues: AddExchangerFormValues = {
+    ...emptyDefaultValues,
+    ...defaultValuesProp,
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
+    setValue,
+    getValues,
     reset,
   } = useForm<AddExchangerFormValues>({
     resolver: yupResolver(addExchangerSchema),
-    defaultValues,
+    defaultValues: formDefaultValues,
   });
 
   const onSubmit = async (data: AddExchangerFormValues) => {
-    const result = await createExchanger(collectionId, data);
+    const result = exchangerId
+      ? await updateExchanger(collectionId, exchangerId, data)
+      : await createExchanger(collectionId, data);
     if (result.ok) {
-      reset(defaultValues);
+      reset(formDefaultValues);
       onSuccess?.();
     } else {
       for (const [field, message] of Object.entries(result.errors)) {
@@ -88,14 +112,26 @@ export function AddExchangerForm({
 
       <div>
         <Label htmlFor="add-exchanger-has">Has (comma-separated numbers)</Label>
-        <textarea
-          id="add-exchanger-has"
-          {...register("has")}
-          rows={3}
-          placeholder="e.g. 1, 2, 5"
-          className={textareaClassName}
-          aria-invalid={!!errors.has}
-        />
+        <div className="flex flex-col gap-2">
+          <textarea
+            id="add-exchanger-has"
+            {...register("has")}
+            rows={3}
+            placeholder="e.g. 1, 2, 5"
+            className={textareaClassName}
+            aria-invalid={!!errors.has}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            className="w-fit"
+            onClick={() =>
+              setValue("has", formatNumbersText(getValues("has") ?? ""))
+            }
+          >
+            Format
+          </Button>
+        </div>
         {errors.has && (
           <p className="mt-1 text-sm text-destructive">{errors.has.message}</p>
         )}
@@ -105,14 +141,26 @@ export function AddExchangerForm({
         <Label htmlFor="add-exchanger-needs">
           Needs (comma-separated numbers)
         </Label>
-        <textarea
-          id="add-exchanger-needs"
-          {...register("needs")}
-          rows={3}
-          placeholder="e.g. 3, 4, 6"
-          className={textareaClassName}
-          aria-invalid={!!errors.needs}
-        />
+        <div className="flex flex-col gap-2">
+          <textarea
+            id="add-exchanger-needs"
+            {...register("needs")}
+            rows={3}
+            placeholder="e.g. 3, 4, 6"
+            className={textareaClassName}
+            aria-invalid={!!errors.needs}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            className="w-fit"
+            onClick={() =>
+              setValue("needs", formatNumbersText(getValues("needs") ?? ""))
+            }
+          >
+            Format
+          </Button>
+        </div>
         {errors.needs && (
           <p className="mt-1 text-sm text-destructive">{errors.needs.message}</p>
         )}

@@ -1,32 +1,59 @@
 import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Pencil } from "lucide-react";
 import type { Exchangers } from "@/generated/prisma/client";
 import { formatDate } from "@/lib/utils/date";
+import { Button } from "@/lib/components/ui/button";
 import { cn } from "@/lib/components/utils";
 
 type ExchangerCardProps = {
   exchanger: Exchangers;
+  collected: number[];
+  onEdit?: (exchanger: Exchangers) => void;
 };
 
-export function ExchangerCard({ exchanger }: ExchangerCardProps) {
-  const first = exchanger.has.length;
-  const second = exchanger.needs.length;
+function countBy(arr: number[]): Map<number, number> {
+  const m = new Map<number, number>();
+  for (const n of arr) m.set(n, (m.get(n) ?? 0) + 1);
+  return m;
+}
+
+export function ExchangerCard({ exchanger, collected, onEdit }: ExchangerCardProps) {
+  const collectedSet = new Set(collected);
+  const collectedCounts = countBy(collected);
+  const first = exchanger.has.filter((n) => !collectedSet.has(n)).length;
+  const second = exchanger.needs.filter(
+    (n) => (collectedCounts.get(n) ?? 0) > 1
+  ).length;
   return (
     <div className="rounded-lg border border-border bg-card p-4 text-card-foreground transition-colors hover:bg-muted/50">
       <div className="flex items-center justify-between gap-2">
         <h2 className="min-w-0 font-medium text-foreground">{exchanger.name}</h2>
-        <Link
-          href={exchanger.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Open ${exchanger.name} link in new tab`}
-          className={cn(
-            "shrink-0 rounded-lg p-1.5 text-muted-foreground transition-colors",
-            "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        <div className="flex shrink-0 items-center gap-0.5">
+          {onEdit && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-8 text-muted-foreground hover:text-foreground"
+              onClick={() => onEdit(exchanger)}
+              aria-label={`Edit ${exchanger.name}`}
+            >
+              <Pencil className="size-4" aria-hidden />
+            </Button>
           )}
-        >
-          <ExternalLink className="size-4" aria-hidden />
-        </Link>
+          <Link
+            href={exchanger.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Open ${exchanger.name} link in new tab`}
+            className={cn(
+              "rounded-lg p-1.5 text-muted-foreground transition-colors",
+              "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            )}
+          >
+            <ExternalLink className="size-4" aria-hidden />
+          </Link>
+        </div>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
         {formatDate(exchanger.createdAt)}

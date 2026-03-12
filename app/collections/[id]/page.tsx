@@ -60,6 +60,7 @@ export default async function CollectionPage({
           <ExchangersSection
             collectionId={collection.id}
             exchangers={collection.exchangers}
+            collected={collectedArr}
           />
         </div>
       </main>
