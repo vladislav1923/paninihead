@@ -19,12 +19,23 @@ enum CollectionStatus {
 }
 
 model Collections {
-  id          String           @id @default(cuid())
+  id          String       @id @default(cuid())
   name        String
   status      CollectionStatus @default(InProgress)
   imageUrl    String?
   total       Int
   collected   Int[]
-  createdAt   DateTime         @default(now())
+  createdAt   DateTime     @default(now())
   completedAt DateTime?
+  exchangers  Exchangers[]
+}
+
+model Exchangers {
+  id           String     @id @default(cuid())
+  name         String
+  collectionId String
+  collection   Collections @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  has          Int[]
+  needs        Int[]
+  createdAt    DateTime   @default(now())
 }
