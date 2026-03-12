@@ -30,7 +30,7 @@ export function CollectedPreview({
     <div>
       <div className="mb-4 flex items-center justify-between gap-2">
         <p className="text-sm text-muted-foreground">
-          {collected.length} / {total} collected
+          {collectedSet.size} / {total} collected
         </p>
         <Button
           type="button"

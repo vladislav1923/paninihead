@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CollectionStatus } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { CollectedPreview } from "@/lib/components/CollectedPreview";
 import { Badge } from "@/lib/components/ui/badge";
@@ -21,6 +20,10 @@ export default async function CollectionPage({
 
   if (!collection) notFound();
 
+  const collectedArr = collection.collected ?? [];
+  const uniqueCollected = new Set(collectedArr).size;
+  const isCompleted = collection.total > 0 && uniqueCollected === collection.total;
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border px-6 py-4">
@@ -40,16 +43,8 @@ export default async function CollectionPage({
             {collection.name}
           </h1>
           <Badge
-            text={
-              collection.status === CollectionStatus.Completed
-                ? "COMPLETED"
-                : "IN PROGRESS"
-            }
-            variant={
-              collection.status === CollectionStatus.Completed
-                ? "green"
-                : "orange"
-            }
+            text={isCompleted ? "COMPLETED" : "IN PROGRESS"}
+            variant={isCompleted ? "green" : "orange"}
           />
         </div>
 
