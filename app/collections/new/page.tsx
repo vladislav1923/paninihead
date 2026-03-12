@@ -1,16 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
-import { createCollection, type CreateCollectionState } from "@/lib/actions/collections";
+import { useForm } from "react-hook-form";
+import type { Resolver } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { createCollection } from "@/lib/actions/collections";
+import { createCollectionSchema } from "@/lib/schemas/collection";
+import type { CreateCollectionFormInput } from "@/lib/schemas/collection";
 import { CollectionForm } from "@/lib/components/forms/CollectionForm";
 import { Button } from "@/lib/components/ui/button";
 
-const initialState: CreateCollectionState = {};
+const defaultValues: CreateCollectionFormInput = {
+  name: "",
+  imageUrl: "",
+  total: "",
+};
 
 export default function NewCollectionPage() {
-  const [state, formAction] = useActionState(createCollection, initialState);
-  const errors = state?.errors ?? {};
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+  } = useForm<CreateCollectionFormInput>({
+    resolver: yupResolver(createCollectionSchema) as Resolver<CreateCollectionFormInput>,
+    defaultValues,
+  });
+
+  const onSubmit = async (data: CreateCollectionFormInput) => {
+    const result = await createCollection(data);
+    if (result && !result.ok) {
+      for (const [field, message] of Object.entries(result.errors)) {
+        setError(field as keyof CreateCollectionFormInput, { message });
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -29,14 +53,20 @@ export default function NewCollectionPage() {
         <h1 className="mb-6 text-xl font-semibold text-foreground">
           New collection
         </h1>
-        <form action={formAction} className="flex flex-col gap-6" noValidate>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-6"
+          noValidate
+        >
           <CollectionForm
-            key={state?.values ? JSON.stringify(state.values) : "new"}
+            register={register}
             errors={errors}
-            collection={state?.values}
+            defaultValues={defaultValues}
           />
           <div className="flex gap-3">
-            <Button type="submit">Create collection</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Creating…" : "Create collection"}
+            </Button>
             <Button type="reset" variant="outline">
               Reset
             </Button>

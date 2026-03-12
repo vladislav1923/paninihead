@@ -29,3 +29,9 @@ export const createCollectionSchema = yup.object({
 export type CreateCollectionFormValues = yup.InferType<
   typeof createCollectionSchema
 >;
+
+/** Form input type (total can be string from number input before submit) */
+export type CreateCollectionFormInput = Omit<
+  CreateCollectionFormValues,
+  "total"
+> & { total: string | number };

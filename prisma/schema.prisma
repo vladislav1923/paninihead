@@ -31,11 +31,12 @@ model Collections {
 }
 
 model Exchangers {
-  id           String     @id @default(cuid())
+  id           String       @id @default(cuid())
   name         String
+  link         String
   collectionId String
-  collection   Collections @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  collection   Collections  @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   has          Int[]
   needs        Int[]
-  createdAt    DateTime   @default(now())
+  createdAt    DateTime     @default(now())
 }

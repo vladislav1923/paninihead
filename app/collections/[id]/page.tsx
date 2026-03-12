@@ -4,7 +4,7 @@ import { CollectionStatus } from "@/generated/prisma/enums";
 import { db } from "@/lib/db";
 import { CollectedForm } from "@/lib/components/forms/CollectedForm";
 import { Badge } from "@/lib/components/ui/badge";
-import { ExchangerCard } from "@/lib/components/ui/ExchangerCard";
+import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
 
 export default async function CollectionPage({
   params,
@@ -62,23 +62,10 @@ export default async function CollectionPage({
             />
           </section>
 
-          <section className="min-w-0">
-            <h2 className="mb-4 text-sm font-medium text-foreground">
-              Exchangers
-            </h2>
-            <ul className="flex flex-col gap-4">
-              {collection.exchangers.map((exchanger) => (
-                <li key={exchanger.id}>
-                  <ExchangerCard exchanger={exchanger} />
-                </li>
-              ))}
-            </ul>
-            {collection.exchangers.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                No exchangers yet.
-              </p>
-            )}
-          </section>
+          <ExchangersSection
+            collectionId={collection.id}
+            exchangers={collection.exchangers}
+          />
         </div>
       </main>
     </div>
