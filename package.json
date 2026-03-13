@@ -6,7 +6,7 @@
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "yarn lint && prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
