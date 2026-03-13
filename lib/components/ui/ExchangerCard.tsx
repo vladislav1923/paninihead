@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ExternalLink, Pencil, Trash2 } from "lucide-react";
 import type { Exchangers } from "@/generated/prisma/client";
-import { formatDate } from "@/lib/utils/date";
+import { formatDate } from "@/lib/utilities/date";
 import { Button } from "@/lib/components/ui/button";
 import { cn } from "@/lib/components/utils";
 

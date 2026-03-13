@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { db } from "@/lib/db";
+import { db } from "@/lib/utilities/db";
 import { validateFormSchema } from "@/lib/utilities/validation";
 import { addExchangerSchema, parseCommaSeparatedNumbers } from "@/lib/schemas/exchanger";
 

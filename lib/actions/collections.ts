@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { CollectionStatus } from "@/generated/prisma/enums";
-import { db } from "@/lib/db";
+import { db } from "@/lib/utilities/db";
 import { createCollectionSchema } from "@/lib/schemas/collection";
 import { validateFormSchema } from "@/lib/utilities/validation";
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CollectionStatus } from "@/generated/prisma/enums";
-import { formatDate } from "@/lib/utils/date";
+import { formatDate } from "@/lib/utilities/date";
 import { Badge } from "@/lib/components/ui/badge";
 
 type CollectionCardProps = {

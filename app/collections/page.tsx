@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { db } from "@/lib/db";
+import { db } from "@/lib/utilities/db";
 import { CollectionCard } from "@/lib/components/ui/CollectionCard";
 
 export default async function CollectionsPage() {
