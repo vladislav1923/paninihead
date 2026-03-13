@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { toast } from "sonner";
 import { Dialog } from "@/lib/components/ui/Dialog";
 import { Button } from "@/lib/components/ui/button";
 import { deleteExchanger } from "@/lib/actions/exchangers";
@@ -31,7 +32,11 @@ export function DeleteExchangerDialog({
       if (result.ok) {
         onOpenChange(false);
         onSuccess?.();
+      } else {
+        toast.error("Failed to delete. Please try again.");
       }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsDeleting(false);
     }

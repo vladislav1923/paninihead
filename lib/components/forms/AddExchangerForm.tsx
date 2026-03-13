@@ -2,6 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "sonner";
 import { createExchanger, updateExchanger } from "@/lib/actions/exchangers";
 import { addExchangerSchema, type AddExchangerFormValues } from "@/lib/schemas/exchanger";
 import { Button } from "@/lib/components/ui/button";
@@ -64,16 +65,21 @@ export function AddExchangerForm({
   });
 
   const onSubmit = async (data: AddExchangerFormValues) => {
-    const result = exchangerId
-      ? await updateExchanger(collectionId, exchangerId, data)
-      : await createExchanger(collectionId, data);
-    if (result.ok) {
-      reset(formDefaultValues);
-      onSuccess?.();
-    } else {
-      for (const [field, message] of Object.entries(result.errors)) {
-        setError(field as keyof AddExchangerFormValues, { message });
+    try {
+      const result = exchangerId
+        ? await updateExchanger(collectionId, exchangerId, data)
+        : await createExchanger(collectionId, data);
+      if (result.ok) {
+        reset(formDefaultValues);
+        onSuccess?.();
+      } else {
+        for (const [field, message] of Object.entries(result.errors)) {
+          setError(field as keyof AddExchangerFormValues, { message });
+        }
+        toast.error("Request failed. Please fix the errors and try again.");
       }
+    } catch {
+      toast.error("Something went wrong. Please try again.");
     }
   };
 

@@ -2,6 +2,7 @@
 
 import { memo, useCallback, useMemo, useState } from "react";
 import { Minus, Plus } from "lucide-react";
+import { toast } from "sonner";
 import { updateCollected } from "@/lib/actions/collections";
 import { Button } from "@/lib/components/ui/button";
 import { cn } from "@/lib/components/utils";
@@ -154,6 +155,8 @@ export function CollectedForm({
     try {
       await updateCollected(collectionId, collected, total);
       onSaved?.();
+    } catch {
+      toast.error("Failed to save. Please try again.");
     } finally {
       setIsSaving(false);
     }

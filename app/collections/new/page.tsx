@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import type { Resolver } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "sonner";
 import { createCollection } from "@/lib/actions/collections";
 import { createCollectionSchema } from "@/lib/schemas/collection";
 import type { CreateCollectionFormInput } from "@/lib/schemas/collection";
@@ -28,11 +29,18 @@ export default function NewCollectionPage() {
   });
 
   const onSubmit = async (data: CreateCollectionFormInput) => {
-    const result = await createCollection(data);
-    if (result && !result.ok) {
-      for (const [field, message] of Object.entries(result.errors)) {
-        setError(field as keyof CreateCollectionFormInput, { message });
+    try {
+      const result = await createCollection(data);
+      if (result && !result.ok) {
+        for (const [field, message] of Object.entries(result.errors)) {
+          setError(field as keyof CreateCollectionFormInput, { message });
+        }
+        toast.error("Request failed. Please fix the errors and try again.");
       }
+    } catch (err) {
+      const digest = err && typeof err === "object" && "digest" in err ? String((err as { digest?: string }).digest) : "";
+      if (digest.startsWith("NEXT_REDIRECT")) throw err;
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
