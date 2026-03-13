@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import { Dialog } from "@/lib/components/ui/Dialog";
 import { MakeDealForm } from "@/lib/components/forms/MakeDealForm";
+import { Dialog } from "@/lib/components/ui/Dialog";
 
 function countBy(arr: number[]): Map<number, number> {
   const m = new Map<number, number>();

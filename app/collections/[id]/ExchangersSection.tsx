@@ -145,9 +145,7 @@ export function ExchangersSection({
                 </span>
                 <span className="ml-2 text-muted-foreground">
                   {formatDate(
-                    deal.createdAt instanceof Date
-                      ? deal.createdAt
-                      : new Date(deal.createdAt),
+                    deal.createdAt instanceof Date ? deal.createdAt : new Date(deal.createdAt),
                   )}
                 </span>
               </li>

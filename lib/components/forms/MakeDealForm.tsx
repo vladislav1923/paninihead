@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import { createDeal } from "@/lib/actions/deals";
 import { Button } from "@/lib/components/ui/button";
 import { Label } from "@/lib/components/ui/label";
-import { dealFormSchema } from "@/lib/schemas/deal";
 import type { DealFormValues } from "@/lib/schemas/deal";
+import { dealFormSchema } from "@/lib/schemas/deal";
 
 const textareaClassName =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30";
@@ -87,16 +87,12 @@ export function MakeDealForm({
             type="button"
             variant="outline"
             className="w-fit"
-            onClick={() =>
-              setValue("in", formatNumbersText(getValues("in") ?? ""))
-            }
+            onClick={() => setValue("in", formatNumbersText(getValues("in") ?? ""))}
           >
             Format
           </Button>
         </div>
-        {errors.in && (
-          <p className="mt-1 text-sm text-destructive">{errors.in.message}</p>
-        )}
+        {errors.in && <p className="mt-1 text-sm text-destructive">{errors.in.message}</p>}
       </div>
 
       <div>
@@ -114,16 +110,12 @@ export function MakeDealForm({
             type="button"
             variant="outline"
             className="w-fit"
-            onClick={() =>
-              setValue("out", formatNumbersText(getValues("out") ?? ""))
-            }
+            onClick={() => setValue("out", formatNumbersText(getValues("out") ?? ""))}
           >
             Format
           </Button>
         </div>
-        {errors.out && (
-          <p className="mt-1 text-sm text-destructive">{errors.out.message}</p>
-        )}
+        {errors.out && <p className="mt-1 text-sm text-destructive">{errors.out.message}</p>}
       </div>
 
       <div className="flex justify-end gap-2 pt-2">
@@ -132,10 +124,7 @@ export function MakeDealForm({
             Cancel
           </Button>
         )}
-        <Button
-          type="submit"
-          disabled={isSubmitting || !canSave}
-        >
+        <Button type="submit" disabled={isSubmitting || !canSave}>
           {isSubmitting ? "Saving…" : "Save"}
         </Button>
       </div>

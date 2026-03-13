@@ -108,7 +108,10 @@ export function ExchangerCard({
         {inNumbers.length > 0 ? inNumbers.join(", ") : "—"}
       </p>
       <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-        <ArrowRight className="size-3.5 shrink-0 text-orange-600 dark:text-orange-400" aria-hidden />
+        <ArrowRight
+          className="size-3.5 shrink-0 text-orange-600 dark:text-orange-400"
+          aria-hidden
+        />
         {outNumbers.length > 0 ? outNumbers.join(", ") : "—"}
       </p>
     </div>

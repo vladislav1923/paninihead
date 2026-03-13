@@ -2,10 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { CollectionStatus } from "@/generated/prisma/enums";
+import { dealFormSchema, parseCommaSeparatedNumbers } from "@/lib/schemas/deal";
 import { db } from "@/lib/utilities/db";
-import { parseCommaSeparatedNumbers } from "@/lib/schemas/deal";
 import { validateFormSchema } from "@/lib/utilities/validation";
-import { dealFormSchema } from "@/lib/schemas/deal";
 
 type Result = { ok: true } | { ok: false; errors: Record<string, string> };
 
@@ -58,9 +57,7 @@ export async function createDeal(
     if (i !== -1) newNeeds.splice(i, 1);
   }
 
-  const isCompleted =
-    collection.total > 0 &&
-    new Set(collected).size >= collection.total;
+  const isCompleted = collection.total > 0 && new Set(collected).size >= collection.total;
 
   await db.$transaction([
     db.deals.create({
