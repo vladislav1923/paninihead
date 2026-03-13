@@ -1,7 +1,7 @@
 "use client";
 
-import { memo, useCallback, useMemo, useState } from "react";
 import { Minus, Plus } from "lucide-react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { updateCollected } from "@/lib/actions/collections";
 import { Button } from "@/lib/components/ui/button";
@@ -39,7 +39,6 @@ type CellProps = {
 };
 
 const Cell = memo(function Cell({ n, count, onIncrement, onDecrement }: CellProps) {
-  const isCollected = count > 0;
   const greenLevel =
     count >= 3
       ? "bg-green-500/50 text-green-800 dark:bg-green-500/55 dark:text-green-200"
@@ -53,7 +52,7 @@ const Cell = memo(function Cell({ n, count, onIncrement, onDecrement }: CellProp
       <div
         className={cn(
           "relative h-full w-full min-h-0 min-w-0 overflow-hidden rounded-md p-0.5 tabular-nums",
-          greenLevel ?? "bg-muted/60 text-muted-foreground"
+          greenLevel ?? "bg-muted/60 text-muted-foreground",
         )}
       >
         <span className="absolute inset-0 flex items-center justify-center text-lg font-bold leading-none -translate-y-[5px]">
@@ -69,9 +68,7 @@ const Cell = memo(function Cell({ n, count, onIncrement, onDecrement }: CellProp
           >
             <Minus className="size-2.5" aria-hidden />
           </button>
-          <span className="min-w-0 shrink-0 text-center text-[8px] leading-none">
-            {count}
-          </span>
+          <span className="min-w-0 shrink-0 text-center text-[8px] leading-none">{count}</span>
           <button
             type="button"
             onClick={() => onIncrement(n)}
@@ -92,16 +89,13 @@ export function CollectedForm({
   initialCollected,
   onSaved,
 }: CollectedFormProps) {
-  const initialCounts = useMemo(
-    () => collectedToCounts(initialCollected),
-    [initialCollected]
-  );
+  const initialCounts = useMemo(() => collectedToCounts(initialCollected), [initialCollected]);
 
   const [counts, setCounts] = useState<Map<number, number>>(() => new Map(initialCounts));
   const [isSaving, setIsSaving] = useState(false);
 
   const increment = useCallback((n: number) => {
-    setCounts((prev) => {
+    setCounts(prev => {
       const next = new Map(prev);
       next.set(n, (next.get(n) ?? 0) + 1);
       return next;
@@ -109,7 +103,7 @@ export function CollectedForm({
   }, []);
 
   const decrement = useCallback((n: number) => {
-    setCounts((prev) => {
+    setCounts(prev => {
       const next = new Map(prev);
       const current = next.get(n) ?? 0;
       if (current <= 0) return prev;
@@ -119,10 +113,7 @@ export function CollectedForm({
     });
   }, []);
 
-  const collected = useMemo(
-    () => countsToCollected(counts, total),
-    [counts, total]
-  );
+  const collected = useMemo(() => countsToCollected(counts, total), [counts, total]);
 
   const hasChanges = useMemo(() => {
     if (initialCounts.size !== counts.size) return true;
@@ -175,7 +166,7 @@ export function CollectedForm({
             gridTemplateColumns: "repeat(auto-fill, minmax(calc((1.5rem + 2px) * 2), 1fr))",
           }}
         >
-          {numbers.map((n) => (
+          {numbers.map(n => (
             <Cell
               key={n}
               n={n}
@@ -207,12 +198,7 @@ export function CollectedForm({
                 </span>
               )}
             </div>
-            <Button
-              type="button"
-              onClick={handleSave}
-              disabled={isSaving}
-              className="shrink-0"
-            >
+            <Button type="button" onClick={handleSave} disabled={isSaving} className="shrink-0">
               {isSaving ? "Saving…" : "Save"}
             </Button>
           </div>

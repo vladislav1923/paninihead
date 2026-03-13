@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
-import { createPortal } from "react-dom";
 import { X } from "lucide-react";
-import { cn } from "@/lib/components/utils";
+import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/lib/components/ui/button";
+import { cn } from "@/lib/components/utils";
 
 type DialogProps = {
   open: boolean;
@@ -23,13 +23,6 @@ export function Dialog({
   className,
   fullScreen = false,
 }: DialogProps) {
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === "Escape") onOpenChange(false);
-    },
-    [onOpenChange]
-  );
-
   useEffect(() => {
     if (open) {
       const prev = document.body.style.overflow;
@@ -44,15 +37,12 @@ export function Dialog({
 
   const content = (
     <div
-      className={cn(
-        "fixed inset-0 z-50",
-        !fullScreen && "flex items-center justify-center p-4"
-      )}
-      onKeyDown={handleKeyDown}
+      className={cn("fixed inset-0 z-50", !fullScreen && "flex items-center justify-center p-4")}
     >
-      <div
-        className="fixed inset-0 bg-black/50"
-        aria-hidden
+      <button
+        type="button"
+        aria-label="Close dialog"
+        className="fixed inset-0 cursor-default bg-black/50"
         onClick={() => onOpenChange(false)}
       />
       <div
@@ -65,20 +55,21 @@ export function Dialog({
             ? "fixed inset-4 overflow-hidden rounded-xl border border-border shadow-lg"
             : "relative w-full max-w-lg rounded-xl border border-border p-6 shadow-lg",
           !fullScreen && "p-6",
-          className
+          className,
         )}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
+        onKeyDown={e => {
+          if (e.key === "Escape") onOpenChange(false);
+          else e.stopPropagation();
+        }}
       >
         <div
           className={cn(
             "flex shrink-0 items-center justify-between border-b border-border",
-            fullScreen ? "px-6 py-4" : "mb-4"
+            fullScreen ? "px-6 py-4" : "mb-4",
           )}
         >
-          <h2
-            id="dialog-title"
-            className="font-semibold text-foreground text-lg"
-          >
+          <h2 id="dialog-title" className="font-semibold text-foreground text-lg">
             {title}
           </h2>
           <Button
@@ -99,7 +90,5 @@ export function Dialog({
     </div>
   );
 
-  return typeof document !== "undefined"
-    ? createPortal(content, document.body)
-    : null;
+  return typeof document !== "undefined" ? createPortal(content, document.body) : null;
 }

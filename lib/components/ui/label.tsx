@@ -4,10 +4,8 @@ type LabelProps = React.ComponentProps<"label">;
 
 function Label({ className, ...props }: LabelProps) {
   return (
-    <label
-      className={cn("text-sm font-medium text-foreground", className)}
-      {...props}
-    />
+    // biome-ignore lint/a11y/noLabelWithoutControl: Association is provided by parent via htmlFor.
+    <label className={cn("text-sm font-medium text-foreground", className)} {...props} />
   );
 }
 

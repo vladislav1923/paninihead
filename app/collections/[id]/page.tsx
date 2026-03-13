@@ -1,15 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { db } from "@/lib/utilities/db";
+import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
 import { CollectedPreview } from "@/lib/components/CollectedPreview";
 import { Badge } from "@/lib/components/ui/badge";
-import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
+import { db } from "@/lib/utilities/db";
 
-export default async function CollectionPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function CollectionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const collection = await db.collections.findUnique({
     where: { id },
@@ -42,9 +38,7 @@ export default async function CollectionPage({
 
       <main className="mx-auto max-w-[1240px] px-6 py-8">
         <div className="mb-6 flex flex-wrap items-center gap-2">
-          <h1 className="text-xl font-semibold text-foreground">
-            {collection.name}
-          </h1>
+          <h1 className="text-xl font-semibold text-foreground">{collection.name}</h1>
           <Badge
             text={isCompleted ? "COMPLETED" : "IN PROGRESS"}
             variant={isCompleted ? "green" : "orange"}

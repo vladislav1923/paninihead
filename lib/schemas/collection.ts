@@ -22,16 +22,13 @@ export const createCollectionSchema = yup.object({
     .min(1, `Total must be between 1 and ${TOTAL_MAX}.`)
     .max(TOTAL_MAX, `Total must be between 1 and ${TOTAL_MAX}.`)
     .transform((value, originalValue) =>
-      originalValue === "" || originalValue === null ? undefined : value
+      originalValue === "" || originalValue === null ? undefined : value,
     ),
 });
 
-export type CreateCollectionFormValues = yup.InferType<
-  typeof createCollectionSchema
->;
+export type CreateCollectionFormValues = yup.InferType<typeof createCollectionSchema>;
 
 /** Form input type (total can be string from number input before submit) */
-export type CreateCollectionFormInput = Omit<
-  CreateCollectionFormValues,
-  "total"
-> & { total: string | number };
+export type CreateCollectionFormInput = Omit<CreateCollectionFormValues, "total"> & {
+  total: string | number;
+};

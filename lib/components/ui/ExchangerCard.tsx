@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { ExternalLink, Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
 import type { Exchangers } from "@/generated/prisma/client";
-import { formatDate } from "@/lib/utilities/date";
 import { Button } from "@/lib/components/ui/button";
 import { cn } from "@/lib/components/utils";
+import { formatDate } from "@/lib/utilities/date";
 
 type ExchangerCardProps = {
   exchanger: Exchangers;
@@ -21,10 +21,8 @@ function countBy(arr: number[]): Map<number, number> {
 export function ExchangerCard({ exchanger, collected, onEdit, onDelete }: ExchangerCardProps) {
   const collectedSet = new Set(collected);
   const collectedCounts = countBy(collected);
-  const first = exchanger.has.filter((n) => !collectedSet.has(n)).length;
-  const second = exchanger.needs.filter(
-    (n) => (collectedCounts.get(n) ?? 0) > 1
-  ).length;
+  const first = exchanger.has.filter(n => !collectedSet.has(n)).length;
+  const second = exchanger.needs.filter(n => (collectedCounts.get(n) ?? 0) > 1).length;
   return (
     <div className="rounded-lg border border-border bg-card p-4 text-card-foreground transition-colors hover:bg-muted/50">
       <div className="flex items-center justify-between gap-2">
@@ -49,7 +47,7 @@ export function ExchangerCard({ exchanger, collected, onEdit, onDelete }: Exchan
             aria-label={`Open ${exchanger.name} link in new tab`}
             className={cn(
               "rounded-lg p-1.5 text-muted-foreground transition-colors",
-              "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             )}
           >
             <ExternalLink className="size-4" aria-hidden />

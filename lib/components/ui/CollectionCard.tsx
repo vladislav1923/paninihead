@@ -1,7 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import { CollectionStatus } from "@/generated/prisma/enums";
-import { formatDate } from "@/lib/utilities/date";
 import { Badge } from "@/lib/components/ui/badge";
+import { formatDate } from "@/lib/utilities/date";
 
 type CollectionCardProps = {
   collection: {
@@ -19,12 +20,15 @@ export function CollectionCard({ collection }: CollectionCardProps) {
       href={`/collections/${collection.id}`}
       className="flex flex-wrap items-center gap-4 rounded-lg border border-border bg-background p-4 transition-colors hover:bg-muted/50"
     >
-      <div className="size-16 shrink-0 overflow-hidden rounded-md bg-muted">
+      <div className="relative size-16 shrink-0 overflow-hidden rounded-md bg-muted">
         {collection.imageUrl ? (
-          <img
+          <Image
             src={collection.imageUrl}
             alt=""
-            className="size-full object-cover"
+            fill
+            sizes="64px"
+            className="object-cover"
+            unoptimized
           />
         ) : (
           <div
@@ -39,21 +43,11 @@ export function CollectionCard({ collection }: CollectionCardProps) {
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="font-medium text-foreground">{collection.name}</h2>
           <Badge
-            text={
-              collection.status === CollectionStatus.Completed
-                ? "COMPLETED"
-                : "IN PROGRESS"
-            }
-            variant={
-              collection.status === CollectionStatus.Completed
-                ? "green"
-                : "orange"
-            }
+            text={collection.status === CollectionStatus.Completed ? "COMPLETED" : "IN PROGRESS"}
+            variant={collection.status === CollectionStatus.Completed ? "green" : "orange"}
           />
         </div>
-        <p className="text-sm text-muted-foreground">
-          Created {formatDate(collection.createdAt)}
-        </p>
+        <p className="text-sm text-muted-foreground">Created {formatDate(collection.createdAt)}</p>
       </div>
     </Link>
   );

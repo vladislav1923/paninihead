@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback } from "react";
-import { Dialog } from "@/lib/components/ui/Dialog";
 import { AddExchangerForm } from "@/lib/components/forms/AddExchangerForm";
+import { Dialog } from "@/lib/components/ui/Dialog";
 import type { AddExchangerFormValues } from "@/lib/schemas/exchanger";
 
 type ExchangerForEdit = {

@@ -2,10 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { cn } from "@/lib/components/utils";
+import { CollectedForm } from "@/lib/components/forms/CollectedForm";
 import { Button } from "@/lib/components/ui/button";
 import { Dialog } from "@/lib/components/ui/Dialog";
-import { CollectedForm } from "@/lib/components/forms/CollectedForm";
+import { cn } from "@/lib/components/utils";
 
 type CollectedPreviewProps = {
   collectionId: string;
@@ -13,11 +13,7 @@ type CollectedPreviewProps = {
   total: number;
 };
 
-export function CollectedPreview({
-  collectionId,
-  collected,
-  total,
-}: CollectedPreviewProps) {
+export function CollectedPreview({ collectionId, collected, total }: CollectedPreviewProps) {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -48,14 +44,14 @@ export function CollectedPreview({
           gridTemplateColumns: "repeat(auto-fill, minmax(calc(1.25rem + 2px), 1fr))",
         }}
       >
-        {numbers.map((n) => (
+        {numbers.map(n => (
           <div
             key={n}
             className={cn(
               "flex aspect-square min-w-0 items-center justify-center text-[10px] font-medium tabular-nums",
               collectedSet.has(n)
                 ? "bg-green-500/20 text-green-700 dark:bg-green-500/30 dark:text-green-300"
-                : "bg-muted/60 text-muted-foreground"
+                : "bg-muted/60 text-muted-foreground",
             )}
           >
             {n}
@@ -63,20 +59,15 @@ export function CollectedPreview({
         ))}
       </div>
 
-      <Dialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        title="Add Stickers"
-        fullScreen
-      >
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen} title="Add Stickers" fullScreen>
         <CollectedForm
           collectionId={collectionId}
           total={total}
           initialCollected={collected}
           onSaved={() => {
-          setDialogOpen(false);
-          router.refresh();
-        }}
+            setDialogOpen(false);
+            router.refresh();
+          }}
         />
       </Dialog>
     </div>

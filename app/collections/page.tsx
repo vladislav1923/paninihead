@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { db } from "@/lib/utilities/db";
 import { CollectionCard } from "@/lib/components/ui/CollectionCard";
+import { db } from "@/lib/utilities/db";
 
 export default async function CollectionsPage() {
   const collections = await db.collections.findMany({
@@ -24,7 +24,7 @@ export default async function CollectionsPage() {
         </div>
 
         <ul className="flex flex-col gap-6">
-          {collections.map((collection) => (
+          {collections.map(collection => (
             <li key={collection.id}>
               <CollectionCard collection={collection} />
             </li>
@@ -32,9 +32,7 @@ export default async function CollectionsPage() {
         </ul>
 
         {collections.length === 0 && (
-          <p className="text-muted-foreground">
-            No collections yet. Create one to get started.
-          </p>
+          <p className="text-muted-foreground">No collections yet. Create one to get started.</p>
         )}
       </main>
     </div>

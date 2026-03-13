@@ -6,7 +6,7 @@ export type ValidationResult<T> =
 
 export function validateFormSchema<T extends yup.Schema>(
   schema: T,
-  raw: unknown
+  raw: unknown,
 ): ValidationResult<yup.InferType<T>> {
   try {
     const data = schema.validateSync(raw, {

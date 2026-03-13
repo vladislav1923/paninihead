@@ -28,7 +28,7 @@ export function RoundedButton({
         pressed
           ? "bg-green-600 text-white hover:bg-green-700"
           : "bg-muted text-muted-foreground hover:bg-muted hover:brightness-95",
-        className
+        className,
       )}
     >
       {children}

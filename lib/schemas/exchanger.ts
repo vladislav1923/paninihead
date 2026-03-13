@@ -11,11 +11,14 @@ const commaSeparatedNumbers = yup
   .test(
     "comma-separated-numbers",
     "Must be a comma-separated list of numbers (e.g. 1, 2, 3)",
-    (value) => {
+    value => {
       if (value === undefined || value === null || value === "") return true;
-      const parts = value.split(",").map((s) => s.trim()).filter(Boolean);
-      return parts.every((p) => /^-?\d+$/.test(p));
-    }
+      const parts = value
+        .split(",")
+        .map(s => s.trim())
+        .filter(Boolean);
+      return parts.every(p => /^-?\d+$/.test(p));
+    },
   );
 
 export const addExchangerSchema = yup.object({
@@ -39,8 +42,8 @@ export function parseCommaSeparatedNumbers(value: string): number[] {
   if (!value || !value.trim()) return [];
   return value
     .split(",")
-    .map((s) => s.trim())
+    .map(s => s.trim())
     .filter(Boolean)
-    .map((s) => parseInt(s, 10))
-    .filter((n) => !Number.isNaN(n));
+    .map(s => parseInt(s, 10))
+    .filter(n => !Number.isNaN(n));
 }

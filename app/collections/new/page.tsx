@@ -1,15 +1,15 @@
 "use client";
 
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import type { Resolver } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Link from "next/link";
+import type { Resolver } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createCollection } from "@/lib/actions/collections";
-import { createCollectionSchema } from "@/lib/schemas/collection";
-import type { CreateCollectionFormInput } from "@/lib/schemas/collection";
 import { CollectionForm } from "@/lib/components/forms/CollectionForm";
 import { Button } from "@/lib/components/ui/button";
+import type { CreateCollectionFormInput } from "@/lib/schemas/collection";
+import { createCollectionSchema } from "@/lib/schemas/collection";
 
 const defaultValues: CreateCollectionFormInput = {
   name: "",
@@ -38,7 +38,10 @@ export default function NewCollectionPage() {
         toast.error("Request failed. Please fix the errors and try again.");
       }
     } catch (err) {
-      const digest = err && typeof err === "object" && "digest" in err ? String((err as { digest?: string }).digest) : "";
+      const digest =
+        err && typeof err === "object" && "digest" in err
+          ? String((err as { digest?: string }).digest)
+          : "";
       if (digest.startsWith("NEXT_REDIRECT")) throw err;
       toast.error("Something went wrong. Please try again.");
     }
@@ -58,19 +61,9 @@ export default function NewCollectionPage() {
       </header>
 
       <main className="mx-auto max-w-2xl px-6 py-8">
-        <h1 className="mb-6 text-xl font-semibold text-foreground">
-          New collection
-        </h1>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-6"
-          noValidate
-        >
-          <CollectionForm
-            register={register}
-            errors={errors}
-            defaultValues={defaultValues}
-          />
+        <h1 className="mb-6 text-xl font-semibold text-foreground">New collection</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
+          <CollectionForm register={register} errors={errors} defaultValues={defaultValues} />
           <div className="flex gap-3">
             <Button type="submit" disabled={isSubmitting}>
               {isSubmitting ? "Creating…" : "Create collection"}

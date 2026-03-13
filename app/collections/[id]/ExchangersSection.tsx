@@ -5,8 +5,8 @@ import { useCallback, useState } from "react";
 import type { Exchangers } from "@/generated/prisma/client";
 import { AddExchangerDialog } from "@/lib/components/dialogs/AddExchangerDialog";
 import { DeleteExchangerDialog } from "@/lib/components/dialogs/DeleteExchangerDialog";
-import { ExchangerCard } from "@/lib/components/ui/ExchangerCard";
 import { Button } from "@/lib/components/ui/button";
+import { ExchangerCard } from "@/lib/components/ui/ExchangerCard";
 
 type SerializedExchanger = Omit<Exchangers, "createdAt"> & {
   createdAt: Date | string;
@@ -18,18 +18,11 @@ type ExchangersSectionProps = {
   collected: number[];
 };
 
-export function ExchangersSection({
-  collectionId,
-  exchangers,
-  collected,
-}: ExchangersSectionProps) {
+export function ExchangersSection({ collectionId, exchangers, collected }: ExchangersSectionProps) {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingExchanger, setEditingExchanger] = useState<Exchangers | null>(
-    null
-  );
-  const [exchangerToDelete, setExchangerToDelete] =
-    useState<Exchangers | null>(null);
+  const [editingExchanger, setEditingExchanger] = useState<Exchangers | null>(null);
+  const [exchangerToDelete, setExchangerToDelete] = useState<Exchangers | null>(null);
 
   const handleDialogOpenChange = useCallback((open: boolean) => {
     setDialogOpen(open);
@@ -80,7 +73,7 @@ export function ExchangersSection({
         onSuccess={() => router.refresh()}
       />
       <ul className="flex flex-col gap-4">
-        {exchangers.map((exchanger) => (
+        {exchangers.map(exchanger => (
           <li key={exchanger.id}>
             <ExchangerCard
               exchanger={{

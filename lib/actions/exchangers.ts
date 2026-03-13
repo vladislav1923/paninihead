@@ -1,18 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { addExchangerSchema, parseCommaSeparatedNumbers } from "@/lib/schemas/exchanger";
 import { db } from "@/lib/utilities/db";
 import { validateFormSchema } from "@/lib/utilities/validation";
-import { addExchangerSchema, parseCommaSeparatedNumbers } from "@/lib/schemas/exchanger";
 
-type Result =
-  | { ok: true }
-  | { ok: false; errors: Record<string, string> };
+type Result = { ok: true } | { ok: false; errors: Record<string, string> };
 
-export async function createExchanger(
-  collectionId: string,
-  raw: unknown
-): Promise<Result> {
+export async function createExchanger(collectionId: string, raw: unknown): Promise<Result> {
   const validated = validateFormSchema(addExchangerSchema, raw);
   if (!validated.ok) return { ok: false, errors: validated.errors };
 
@@ -34,7 +29,7 @@ export async function createExchanger(
 export async function updateExchanger(
   collectionId: string,
   exchangerId: string,
-  raw: unknown
+  raw: unknown,
 ): Promise<Result> {
   const validated = validateFormSchema(addExchangerSchema, raw);
   if (!validated.ok) return { ok: false, errors: validated.errors };
@@ -54,10 +49,7 @@ export async function updateExchanger(
   return { ok: true };
 }
 
-export async function deleteExchanger(
-  collectionId: string,
-  exchangerId: string
-): Promise<Result> {
+export async function deleteExchanger(collectionId: string, exchangerId: string): Promise<Result> {
   await db.exchangers.update({
     where: { id: exchangerId, collectionId },
     data: { deletedAt: new Date() },

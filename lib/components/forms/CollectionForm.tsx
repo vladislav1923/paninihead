@@ -1,14 +1,10 @@
 "use client";
 
-import type { UseFormRegister, FieldErrors } from "react-hook-form";
-import {
-  NAME_MAX,
-  IMAGE_URL_MAX,
-  TOTAL_MAX,
-} from "@/lib/schemas/collection";
-import type { CreateCollectionFormInput } from "@/lib/schemas/collection";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
+import type { CreateCollectionFormInput } from "@/lib/schemas/collection";
+import { IMAGE_URL_MAX, NAME_MAX, TOTAL_MAX } from "@/lib/schemas/collection";
 
 type CollectionFormProps = {
   register: UseFormRegister<CreateCollectionFormInput>;
@@ -16,11 +12,7 @@ type CollectionFormProps = {
   defaultValues?: Partial<CreateCollectionFormInput>;
 };
 
-export function CollectionForm({
-  register,
-  errors,
-  defaultValues,
-}: CollectionFormProps) {
+export function CollectionForm({ register, errors, defaultValues }: CollectionFormProps) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -57,11 +49,7 @@ export function CollectionForm({
           aria-describedby={errors.imageUrl ? "imageUrl-error" : undefined}
         />
         {errors.imageUrl && (
-          <p
-            id="imageUrl-error"
-            className="text-sm text-destructive"
-            role="alert"
-          >
+          <p id="imageUrl-error" className="text-sm text-destructive" role="alert">
             {errors.imageUrl.message}
           </p>
         )}

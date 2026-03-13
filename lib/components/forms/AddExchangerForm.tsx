@@ -1,14 +1,14 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createExchanger, updateExchanger } from "@/lib/actions/exchangers";
-import { addExchangerSchema, type AddExchangerFormValues } from "@/lib/schemas/exchanger";
 import { Button } from "@/lib/components/ui/button";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
 import { cn } from "@/lib/components/utils";
+import { type AddExchangerFormValues, addExchangerSchema } from "@/lib/schemas/exchanger";
 
 const textareaClassName =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30";
@@ -20,7 +20,7 @@ function formatNumbersText(text: string): string {
   // 2. Remove all symbols that are not numbers or commas
   s = s.replace(/[^0-9,]/g, "");
   // 3. Normalize: split by comma, drop empty, join with single comma
-  const parts = s.split(",").filter((p) => p.length > 0);
+  const parts = s.split(",").filter(p => p.length > 0);
   return parts.join(",");
 }
 
@@ -95,9 +95,7 @@ export function AddExchangerForm({
           className={cn(errors.name && "border-destructive")}
           aria-invalid={!!errors.name}
         />
-        {errors.name && (
-          <p className="mt-1 text-sm text-destructive">{errors.name.message}</p>
-        )}
+        {errors.name && <p className="mt-1 text-sm text-destructive">{errors.name.message}</p>}
       </div>
 
       <div>
@@ -111,9 +109,7 @@ export function AddExchangerForm({
           className={cn(errors.link && "border-destructive")}
           aria-invalid={!!errors.link}
         />
-        {errors.link && (
-          <p className="mt-1 text-sm text-destructive">{errors.link.message}</p>
-        )}
+        {errors.link && <p className="mt-1 text-sm text-destructive">{errors.link.message}</p>}
       </div>
 
       <div>
@@ -131,22 +127,16 @@ export function AddExchangerForm({
             type="button"
             variant="outline"
             className="w-fit"
-            onClick={() =>
-              setValue("has", formatNumbersText(getValues("has") ?? ""))
-            }
+            onClick={() => setValue("has", formatNumbersText(getValues("has") ?? ""))}
           >
             Format
           </Button>
         </div>
-        {errors.has && (
-          <p className="mt-1 text-sm text-destructive">{errors.has.message}</p>
-        )}
+        {errors.has && <p className="mt-1 text-sm text-destructive">{errors.has.message}</p>}
       </div>
 
       <div>
-        <Label htmlFor="add-exchanger-needs">
-          Needs (comma-separated numbers)
-        </Label>
+        <Label htmlFor="add-exchanger-needs">Needs (comma-separated numbers)</Label>
         <div className="flex flex-col gap-2">
           <textarea
             id="add-exchanger-needs"
@@ -160,16 +150,12 @@ export function AddExchangerForm({
             type="button"
             variant="outline"
             className="w-fit"
-            onClick={() =>
-              setValue("needs", formatNumbersText(getValues("needs") ?? ""))
-            }
+            onClick={() => setValue("needs", formatNumbersText(getValues("needs") ?? ""))}
           >
             Format
           </Button>
         </div>
-        {errors.needs && (
-          <p className="mt-1 text-sm text-destructive">{errors.needs.message}</p>
-        )}
+        {errors.needs && <p className="mt-1 text-sm text-destructive">{errors.needs.message}</p>}
       </div>
 
       <div className="flex justify-end gap-2 pt-2">
@@ -178,10 +164,7 @@ export function AddExchangerForm({
             Cancel
           </Button>
         )}
-        <Button
-          type="submit"
-          disabled={isSubmitting || (!!exchangerId && !isDirty)}
-        >
+        <Button type="submit" disabled={isSubmitting || (!!exchangerId && !isDirty)}>
           {isSubmitting ? "Saving…" : "Save"}
         </Button>
       </div>
