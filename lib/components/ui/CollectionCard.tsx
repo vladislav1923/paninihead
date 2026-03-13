@@ -52,7 +52,7 @@ export function CollectionCard({ collection }: CollectionCardProps) {
           />
         </div>
         <p className="text-sm text-muted-foreground">
-          {formatDate(collection.createdAt)}
+          Created {formatDate(collection.createdAt)}
         </p>
       </div>
     </Link>

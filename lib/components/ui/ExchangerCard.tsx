@@ -69,7 +69,7 @@ export function ExchangerCard({ exchanger, collected, onEdit, onDelete }: Exchan
         </div>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
-        {formatDate(exchanger.createdAt)}
+        Created {formatDate(exchanger.createdAt)}
       </p>
       <p className="mt-2 text-sm">
         <span className="text-green-600 dark:text-green-400">{first}</span>
