@@ -1,4 +1,4 @@
-import { ExternalLink, Pencil, Trash2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink, Handshake, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import type { Exchangers } from "@/generated/prisma/client";
 import { Button } from "@/lib/components/ui/button";
@@ -10,6 +10,7 @@ type ExchangerCardProps = {
   collected: number[];
   onEdit?: (exchanger: Exchangers) => void;
   onDelete?: (exchanger: Exchangers) => void;
+  onMakeDeal?: (exchanger: Exchangers) => void;
 };
 
 function countBy(arr: number[]): Map<number, number> {
@@ -18,16 +19,44 @@ function countBy(arr: number[]): Map<number, number> {
   return m;
 }
 
-export function ExchangerCard({ exchanger, collected, onEdit, onDelete }: ExchangerCardProps) {
+export function ExchangerCard({
+  exchanger,
+  collected,
+  onEdit,
+  onDelete,
+  onMakeDeal,
+}: ExchangerCardProps) {
   const collectedSet = new Set(collected);
   const collectedCounts = countBy(collected);
-  const first = exchanger.has.filter(n => !collectedSet.has(n)).length;
-  const second = exchanger.needs.filter(n => (collectedCounts.get(n) ?? 0) > 1).length;
+  const needCounts = countBy(exchanger.needs);
+  const green = exchanger.has.length;
+  const red = [...needCounts.entries()].reduce(
+    (sum, [n, needCount]) => sum + Math.min(collectedCounts.get(n) ?? 0, needCount),
+    0,
+  );
+  const inNumbers = exchanger.has.filter(n => !collectedSet.has(n));
+  const outNumbers: number[] = [];
+  for (const [n, needCount] of needCounts) {
+    const give = Math.min(collectedCounts.get(n) ?? 0, needCount);
+    for (let i = 0; i < give; i++) outNumbers.push(n);
+  }
   return (
     <div className="rounded-lg border border-border bg-card p-4 text-card-foreground transition-colors hover:bg-muted/50">
       <div className="flex items-center justify-between gap-2">
         <h2 className="min-w-0 font-medium text-foreground">{exchanger.name}</h2>
         <div className="flex shrink-0 items-center gap-0.5">
+          {onMakeDeal && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-8 text-green-600 dark:text-green-400 hover:bg-green-500/10 hover:text-green-600 dark:hover:text-green-400"
+              onClick={() => onMakeDeal(exchanger)}
+              aria-label={`Make deal with ${exchanger.name}`}
+            >
+              <Handshake className="size-4" aria-hidden />
+            </Button>
+          )}
           {onEdit && (
             <Button
               type="button"
@@ -70,9 +99,17 @@ export function ExchangerCard({ exchanger, collected, onEdit, onDelete }: Exchan
         Created {formatDate(exchanger.createdAt)}
       </p>
       <p className="mt-2 text-sm">
-        <span className="text-green-600 dark:text-green-400">{first}</span>
+        <span className="text-green-600 dark:text-green-400">{green}</span>
         <span className="text-foreground/70"> / </span>
-        <span className="text-orange-600 dark:text-orange-400">{second}</span>
+        <span className="text-orange-600 dark:text-orange-400">{red}</span>
+      </p>
+      <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <ArrowLeft className="size-3.5 shrink-0 text-green-600 dark:text-green-400" aria-hidden />
+        {inNumbers.length > 0 ? inNumbers.join(", ") : "—"}
+      </p>
+      <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <ArrowRight className="size-3.5 shrink-0 text-orange-600 dark:text-orange-400" aria-hidden />
+        {outNumbers.length > 0 ? outNumbers.join(", ") : "—"}
       </p>
     </div>
   );

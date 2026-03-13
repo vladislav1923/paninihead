@@ -14,6 +14,10 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
         where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
       },
+      deals: {
+        orderBy: { createdAt: "desc" },
+        include: { exchanger: { select: { name: true } } },
+      },
     },
   });
 
@@ -58,6 +62,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
             collectionId={collection.id}
             exchangers={collection.exchangers}
             collected={collectedArr}
+            deals={collection.deals}
           />
         </div>
       </main>

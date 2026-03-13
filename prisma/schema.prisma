@@ -28,6 +28,7 @@ model Collections {
   createdAt   DateTime     @default(now())
   completedAt DateTime?
   exchangers  Exchangers[]
+  deals       Deals[]
 }
 
 model Exchangers {
@@ -40,4 +41,16 @@ model Exchangers {
   needs        Int[]
   createdAt    DateTime     @default(now())
   deletedAt    DateTime?
+  deals        Deals[]
+}
+
+model Deals {
+  id           String      @id @default(cuid())
+  collectionId String
+  exchangerId  String
+  collection   Collections @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  exchanger    Exchangers  @relation(fields: [exchangerId], references: [id], onDelete: Cascade)
+  inNumbers    Int[]
+  outNumbers   Int[]
+  createdAt    DateTime    @default(now())
 }

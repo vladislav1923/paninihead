@@ -3,7 +3,7 @@ import * as yup from "yup";
 const NAME_MAX = 50;
 const LINK_MAX = 300;
 
-const commaSeparatedNumbers = yup
+export const commaSeparatedNumbers = yup
   .string()
   .trim()
   .optional()
