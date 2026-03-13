@@ -25,11 +25,18 @@ export async function createDeal(
   if (outNumbers.length === 0) errors.out = "Enter at least one number";
   if (Object.keys(errors).length > 0) return { ok: false, errors };
 
-  const collection = await db.collections.findUnique({
-    where: { id: collectionId },
-    select: { collected: true, total: true },
-  });
+  const [collection, exchanger] = await Promise.all([
+    db.collections.findUnique({
+      where: { id: collectionId },
+      select: { collected: true, total: true },
+    }),
+    db.exchangers.findUnique({
+      where: { id: exchangerId, collectionId },
+      select: { has: true, needs: true },
+    }),
+  ]);
   if (!collection) return { ok: false, errors: { _: "Collection not found" } };
+  if (!exchanger) return { ok: false, errors: { _: "Exchanger not found" } };
 
   const collected = [...(collection.collected ?? [])];
   for (const n of outNumbers) {
@@ -38,6 +45,17 @@ export async function createDeal(
   }
   for (const n of inNumbers) {
     collected.push(n);
+  }
+
+  const newHas = [...exchanger.has];
+  for (const n of inNumbers) {
+    const i = newHas.indexOf(n);
+    if (i !== -1) newHas.splice(i, 1);
+  }
+  const newNeeds = [...exchanger.needs];
+  for (const n of outNumbers) {
+    const i = newNeeds.indexOf(n);
+    if (i !== -1) newNeeds.splice(i, 1);
   }
 
   const isCompleted =
@@ -60,6 +78,10 @@ export async function createDeal(
         status: isCompleted ? CollectionStatus.Completed : CollectionStatus.InProgress,
         completedAt: isCompleted ? new Date() : null,
       },
+    }),
+    db.exchangers.update({
+      where: { id: exchangerId, collectionId },
+      data: { has: newHas, needs: newNeeds },
     }),
   ]);
 
