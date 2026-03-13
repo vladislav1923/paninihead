@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import type { Exchangers } from "@/generated/prisma/client";
 import { AddExchangerDialog } from "@/lib/components/dialogs/AddExchangerDialog";
+import { DeleteExchangerDialog } from "@/lib/components/dialogs/DeleteExchangerDialog";
 import { ExchangerCard } from "@/lib/components/ui/ExchangerCard";
 import { Button } from "@/lib/components/ui/button";
 
@@ -27,15 +28,25 @@ export function ExchangersSection({
   const [editingExchanger, setEditingExchanger] = useState<Exchangers | null>(
     null
   );
+  const [exchangerToDelete, setExchangerToDelete] =
+    useState<Exchangers | null>(null);
 
   const handleDialogOpenChange = useCallback((open: boolean) => {
     setDialogOpen(open);
     if (!open) setEditingExchanger(null);
   }, []);
 
+  const handleDeleteDialogOpenChange = useCallback((open: boolean) => {
+    if (!open) setExchangerToDelete(null);
+  }, []);
+
   const handleEdit = useCallback((exchanger: Exchangers) => {
     setEditingExchanger(exchanger);
     setDialogOpen(true);
+  }, []);
+
+  const handleDelete = useCallback((exchanger: Exchangers) => {
+    setExchangerToDelete(exchanger);
   }, []);
 
   return (
@@ -60,6 +71,14 @@ export function ExchangersSection({
         exchanger={editingExchanger}
         onSuccess={() => router.refresh()}
       />
+      <DeleteExchangerDialog
+        collectionId={collectionId}
+        exchangerId={exchangerToDelete?.id ?? ""}
+        exchangerName={exchangerToDelete?.name ?? ""}
+        open={!!exchangerToDelete}
+        onOpenChange={handleDeleteDialogOpenChange}
+        onSuccess={() => router.refresh()}
+      />
       <ul className="flex flex-col gap-4">
         {exchangers.map((exchanger) => (
           <li key={exchanger.id}>
@@ -73,6 +92,7 @@ export function ExchangersSection({
               }}
               collected={collected}
               onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           </li>
         ))}

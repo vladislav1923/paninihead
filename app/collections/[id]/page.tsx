@@ -14,7 +14,10 @@ export default async function CollectionPage({
   const collection = await db.collections.findUnique({
     where: { id },
     include: {
-      exchangers: { orderBy: { createdAt: "desc" } },
+      exchangers: {
+        where: { deletedAt: null },
+        orderBy: { createdAt: "desc" },
+      },
     },
   });
 

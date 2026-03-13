@@ -53,7 +53,7 @@ export function AddExchangerForm({
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
     setError,
     setValue,
     getValues,
@@ -172,7 +172,10 @@ export function AddExchangerForm({
             Cancel
           </Button>
         )}
-        <Button type="submit" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          disabled={isSubmitting || (!!exchangerId && !isDirty)}
+        >
           {isSubmitting ? "Saving…" : "Save"}
         </Button>
       </div>

@@ -53,3 +53,15 @@ export async function updateExchanger(
   revalidatePath(`/collections/${collectionId}`);
   return { ok: true };
 }
+
+export async function deleteExchanger(
+  collectionId: string,
+  exchangerId: string
+): Promise<Result> {
+  await db.exchangers.update({
+    where: { id: exchangerId, collectionId },
+    data: { deletedAt: new Date() },
+  });
+  revalidatePath(`/collections/${collectionId}`);
+  return { ok: true };
+}

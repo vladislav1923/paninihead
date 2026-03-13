@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, Pencil } from "lucide-react";
+import { ExternalLink, Pencil, Trash2 } from "lucide-react";
 import type { Exchangers } from "@/generated/prisma/client";
 import { formatDate } from "@/lib/utils/date";
 import { Button } from "@/lib/components/ui/button";
@@ -9,6 +9,7 @@ type ExchangerCardProps = {
   exchanger: Exchangers;
   collected: number[];
   onEdit?: (exchanger: Exchangers) => void;
+  onDelete?: (exchanger: Exchangers) => void;
 };
 
 function countBy(arr: number[]): Map<number, number> {
@@ -17,7 +18,7 @@ function countBy(arr: number[]): Map<number, number> {
   return m;
 }
 
-export function ExchangerCard({ exchanger, collected, onEdit }: ExchangerCardProps) {
+export function ExchangerCard({ exchanger, collected, onEdit, onDelete }: ExchangerCardProps) {
   const collectedSet = new Set(collected);
   const collectedCounts = countBy(collected);
   const first = exchanger.has.filter((n) => !collectedSet.has(n)).length;
@@ -53,6 +54,18 @@ export function ExchangerCard({ exchanger, collected, onEdit }: ExchangerCardPro
           >
             <ExternalLink className="size-4" aria-hidden />
           </Link>
+          {onDelete && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="size-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+              onClick={() => onDelete(exchanger)}
+              aria-label={`Delete ${exchanger.name}`}
+            >
+              <Trash2 className="size-4" aria-hidden />
+            </Button>
+          )}
         </div>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">

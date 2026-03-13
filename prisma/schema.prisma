@@ -39,4 +39,5 @@ model Exchangers {
   has          Int[]
   needs        Int[]
   createdAt    DateTime     @default(now())
+  deletedAt    DateTime?
 }
