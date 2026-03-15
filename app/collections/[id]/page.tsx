@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
-import { CollectedPreview } from "@/lib/components/CollectedPreview";
+import { CollectedPreview } from "@/app/collections/[id]/CollectedPreview";
 import { Badge } from "@/lib/components/ui/badge";
 import { db } from "@/lib/utilities/db";
 

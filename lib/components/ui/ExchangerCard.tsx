@@ -2,7 +2,7 @@ import { ArrowLeft, ArrowRight, ExternalLink, Handshake, Pencil, Trash2 } from "
 import Link from "next/link";
 import type { Exchangers } from "@/generated/prisma/client";
 import { Button } from "@/lib/components/ui/button";
-import { cn } from "@/lib/components/utils";
+import { cn } from "@/lib/utilities/styles";
 import { formatDate } from "@/lib/utilities/date";
 
 type ExchangerCardProps = {

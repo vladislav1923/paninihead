@@ -7,7 +7,7 @@ import { createExchanger, updateExchanger } from "@/lib/actions/exchangers";
 import { Button } from "@/lib/components/ui/button";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
-import { cn } from "@/lib/components/utils";
+import { cn } from "@/lib/utilities/styles";
 import { type AddExchangerFormValues, addExchangerSchema } from "@/lib/schemas/exchanger";
 
 const textareaClassName =

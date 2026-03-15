@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/components/utils";
+import { cn } from "@/lib/utilities/styles";
 
 type RoundedButtonProps = {
   pressed?: boolean;

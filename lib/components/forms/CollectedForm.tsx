@@ -5,7 +5,7 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { updateCollected } from "@/lib/actions/collections";
 import { Button } from "@/lib/components/ui/button";
-import { cn } from "@/lib/components/utils";
+import { cn } from "@/lib/utilities/styles";
 
 type CollectedFormProps = {
   collectionId: string;

@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { cn } from "@/lib/components/utils";
+import { cn } from "@/lib/utilities/styles";
 
 function Card({
   className,
