@@ -180,21 +180,25 @@ export function CollectedForm({
       {hasChanges && (
         <div className="sticky bottom-0 mt-auto shrink-0 border-t border-border bg-background pt-4">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex min-w-0 flex-wrap items-center gap-x-6 gap-y-1 text-sm text-muted-foreground">
+            <div className="flex min-w-0 flex-wrap items-center gap-x-6 gap-y-1 text-sm">
               {savePreviewLists.adding.length > 0 && (
-                <span className="shrink-0 text-green-600 dark:text-green-400">
-                  Adding:{" "}
-                  {savePreviewLists.adding
-                    .map(({ n, delta }) => (delta > 1 ? `${n} (${delta})` : String(n)))
-                    .join(", ")}
+                <span className="inline-block max-w-full">
+                  <span className="text-green-600 dark:text-green-400">Adding:</span>{" "}
+                  <span className="text-muted-foreground break-words">
+                    {savePreviewLists.adding
+                      .map(({ n, delta }) => (delta > 1 ? `${n} (${delta})` : String(n)))
+                      .join(", ")}
+                  </span>
                 </span>
               )}
               {savePreviewLists.removing.length > 0 && (
-                <span className="shrink-0 text-red-600 dark:text-red-400">
-                  Removing:{" "}
-                  {savePreviewLists.removing
-                    .map(({ n, delta }) => (delta > 1 ? `${n} (${delta})` : String(n)))
-                    .join(", ")}
+                <span className="inline-block max-w-full">
+                  <span className="text-red-600 dark:text-red-400">Removing:</span>{" "}
+                  <span className="text-muted-foreground break-words">
+                    {savePreviewLists.removing
+                      .map(({ n, delta }) => (delta > 1 ? `${n} (${delta})` : String(n)))
+                      .join(", ")}
+                  </span>
                 </span>
               )}
             </div>
