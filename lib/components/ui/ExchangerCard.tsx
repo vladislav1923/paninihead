@@ -2,8 +2,8 @@ import { ArrowLeft, ArrowRight, ExternalLink, Handshake, Pencil, Trash2 } from "
 import Link from "next/link";
 import type { Exchangers } from "@/generated/prisma/client";
 import { Button } from "@/lib/components/ui/button";
-import { cn } from "@/lib/utilities/styles";
 import { formatDate } from "@/lib/utilities/date";
+import { cn } from "@/lib/utilities/styles";
 
 type ExchangerCardProps = {
   exchanger: Exchangers;
@@ -103,17 +103,21 @@ export function ExchangerCard({
         <span className="text-foreground/70"> / </span>
         <span className="text-orange-600 dark:text-orange-400">{red}</span>
       </p>
-      {inNumbers.length > 0 && <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-        <ArrowLeft className="size-3.5 shrink-0 text-green-600 dark:text-green-400" aria-hidden />
-        {inNumbers.join(", ")}
-      </p>}
-      {outNumbers.length > 0 && <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
-        <ArrowRight
-          className="size-3.5 shrink-0 text-orange-600 dark:text-orange-400"
-          aria-hidden
-        />
-        {outNumbers.join(", ")}
-      </p>}
+      {inNumbers.length > 0 && (
+        <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <ArrowLeft className="size-3.5 shrink-0 text-green-600 dark:text-green-400" aria-hidden />
+          {inNumbers.join(", ")}
+        </p>
+      )}
+      {outNumbers.length > 0 && (
+        <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+          <ArrowRight
+            className="size-3.5 shrink-0 text-orange-600 dark:text-orange-400"
+            aria-hidden
+          />
+          {outNumbers.join(", ")}
+        </p>
+      )}
     </div>
   );
 }

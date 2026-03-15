@@ -7,8 +7,8 @@ import { createExchanger, updateExchanger } from "@/lib/actions/exchangers";
 import { Button } from "@/lib/components/ui/button";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
-import { cn } from "@/lib/utilities/styles";
 import { type AddExchangerFormValues, addExchangerSchema } from "@/lib/schemas/exchanger";
+import { cn } from "@/lib/utilities/styles";
 
 const textareaClassName =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30";
@@ -22,7 +22,10 @@ function formatNumbersText(text: string): string {
   // 3. Numbers divided by spaces → replace spaces with commas
   s = s.replace(/\s+/g, ",");
   // 4. Normalize: split by comma, trim, drop empty, join with single comma
-  const parts = s.split(",").map((p) => p.trim()).filter((p) => p.length > 0);
+  const parts = s
+    .split(",")
+    .map(p => p.trim())
+    .filter(p => p.length > 0);
   return parts.join(",");
 }
 
