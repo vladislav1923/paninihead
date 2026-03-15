@@ -29,11 +29,6 @@ export function ExchangerCard({
   const collectedSet = new Set(collected);
   const collectedCounts = countBy(collected);
   const needCounts = countBy(exchanger.needs);
-  const green = exchanger.has.length;
-  const red = [...needCounts.entries()].reduce(
-    (sum, [n, needCount]) => sum + Math.min(collectedCounts.get(n) ?? 0, needCount),
-    0,
-  );
   const inNumbers = exchanger.has.filter(n => !collectedSet.has(n));
   const outNumbers: number[] = [];
   for (const [n, needCount] of needCounts) {
@@ -99,9 +94,9 @@ export function ExchangerCard({
         Created {formatDate(exchanger.createdAt)}
       </p>
       <p className="mt-2 text-sm">
-        <span className="text-green-600 dark:text-green-400">{green}</span>
+        <span className="text-green-600 dark:text-green-400">{inNumbers.length ?? 0}</span>
         <span className="text-foreground/70"> / </span>
-        <span className="text-orange-600 dark:text-orange-400">{red}</span>
+        <span className="text-orange-600 dark:text-orange-400">{outNumbers.length ?? 0}</span>
       </p>
       {inNumbers.length > 0 && (
         <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
