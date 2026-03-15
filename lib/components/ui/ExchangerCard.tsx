@@ -103,17 +103,17 @@ export function ExchangerCard({
         <span className="text-foreground/70"> / </span>
         <span className="text-orange-600 dark:text-orange-400">{red}</span>
       </p>
-      <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+      {inNumbers.length > 0 && <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground">
         <ArrowLeft className="size-3.5 shrink-0 text-green-600 dark:text-green-400" aria-hidden />
-        {inNumbers.length > 0 ? inNumbers.join(", ") : "—"}
-      </p>
-      <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
+        {inNumbers.join(", ")}
+      </p>}
+      {outNumbers.length > 0 && <p className="mt-0.5 flex items-center gap-1.5 text-xs text-muted-foreground">
         <ArrowRight
           className="size-3.5 shrink-0 text-orange-600 dark:text-orange-400"
           aria-hidden
         />
-        {outNumbers.length > 0 ? outNumbers.join(", ") : "—"}
-      </p>
+        {outNumbers.join(", ")}
+      </p>}
     </div>
   );
 }
