@@ -11,32 +11,21 @@ import { MakeDealDialog } from "@/lib/components/dialogs/MakeDealDialog";
 import { Button } from "@/lib/components/ui/button";
 import { Card } from "@/lib/components/ui/Card";
 import { formatDate } from "@/lib/utilities/date";
+import { getInNumbers, getOutNumbers } from "@/lib/utilities/exchanger";
 import { cn } from "@/lib/utilities/styles";
 
 type SerializedExchanger = Omit<ExchangersModel, "createdAt"> & {
   createdAt: Date | string;
 };
 
-function countBy(arr: number[]): Map<number, number> {
-  const m = new Map<number, number>();
-  for (const n of arr) m.set(n, (m.get(n) ?? 0) + 1);
-  return m;
-}
-
 function getInAndOutNumbers(
   exchanger: Pick<ExchangersModel, "has" | "needs">,
   collected: number[],
 ) {
-  const collectedSet = new Set(collected);
-  const collectedCounts = countBy(collected);
-  const needCounts = countBy(exchanger.needs);
-  const inNumbers = exchanger.has.filter(n => !collectedSet.has(n));
-  const outNumbers: number[] = [];
-  for (const [n, needCount] of needCounts) {
-    const give = Math.min(collectedCounts.get(n) ?? 0, needCount);
-    for (let i = 0; i < give; i++) outNumbers.push(n);
-  }
-  return { inNumbers, outNumbers };
+  return {
+    inNumbers: getInNumbers(exchanger.has, collected),
+    outNumbers: getOutNumbers(exchanger.needs, collected),
+  };
 }
 
 type ExchangersSectionProps = {

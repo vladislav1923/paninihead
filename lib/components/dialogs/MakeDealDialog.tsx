@@ -3,12 +3,7 @@
 import { useCallback, useMemo } from "react";
 import { MakeDealForm } from "@/lib/components/forms/MakeDealForm";
 import { Dialog } from "@/lib/components/ui/Dialog";
-
-function countBy(arr: number[]): Map<number, number> {
-  const m = new Map<number, number>();
-  for (const n of arr) m.set(n, (m.get(n) ?? 0) + 1);
-  return m;
-}
+import { getInNumbers, getOutNumbers } from "@/lib/utilities/exchanger";
 
 type ExchangerForDeal = {
   id: string;
@@ -45,16 +40,8 @@ export function MakeDealDialog({
 
   const { defaultIn, defaultOut } = useMemo(() => {
     if (!exchanger) return { defaultIn: "", defaultOut: "" };
-    const collectedCounts = countBy(collected);
-    const needCounts = countBy(exchanger.needs);
-    const inNumbers = exchanger.has.join(", ");
-    const outList: number[] = [];
-    for (const [n, needCount] of needCounts) {
-      const ourCount = collectedCounts.get(n) ?? 0;
-      const give = Math.min(ourCount, needCount);
-      for (let i = 0; i < give; i++) outList.push(n);
-    }
-    const outNumbers = outList.join(", ");
+    const inNumbers = getInNumbers(exchanger.has, collected).join(", ");
+    const outNumbers = getOutNumbers(exchanger.needs, collected).join(", ");
     return { defaultIn: inNumbers, defaultOut: outNumbers };
   }, [exchanger, collected]);
 
