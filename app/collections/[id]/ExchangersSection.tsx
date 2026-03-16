@@ -8,7 +8,7 @@ import type { Exchangers as ExchangersModel } from "@/generated/prisma/client";
 import { AddExchangerDialog } from "@/lib/components/dialogs/AddExchangerDialog";
 import { DeleteExchangerDialog } from "@/lib/components/dialogs/DeleteExchangerDialog";
 import { MakeDealDialog } from "@/lib/components/dialogs/MakeDealDialog";
-import { Button } from "@/lib/components/ui/button";
+import { Button } from "@/lib/components/ui/Button";
 import { Card } from "@/lib/components/ui/Card";
 import { formatDate } from "@/lib/utilities/date";
 import { getInNumbers, getOutNumbers } from "@/lib/utilities/exchanger";

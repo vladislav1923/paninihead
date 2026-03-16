@@ -3,7 +3,7 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Button } from "@/lib/components/ui/button";
+import { Button } from "@/lib/components/ui/Button";
 import { cn } from "@/lib/utilities/styles";
 
 type DialogProps = {

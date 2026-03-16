@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CollectionStatus } from "@/generated/prisma/enums";
-import { Badge } from "@/lib/components/ui/badge";
+import { Badge } from "@/lib/components/ui/Badge";
 import { formatDate } from "@/lib/utilities/date";
 
 type CollectionCardProps = {

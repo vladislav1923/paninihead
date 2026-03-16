@@ -4,7 +4,7 @@ import { Minus, Plus } from "lucide-react";
 import { memo, useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { updateCollected } from "@/lib/actions/collections";
-import { Button } from "@/lib/components/ui/button";
+import { Button } from "@/lib/components/ui/Button";
 import { cn } from "@/lib/utilities/styles";
 
 type CollectedFormProps = {

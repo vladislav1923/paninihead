@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { deleteExchanger } from "@/lib/actions/exchangers";
-import { Button } from "@/lib/components/ui/button";
+import { Button } from "@/lib/components/ui/Button";
 import { Dialog } from "@/lib/components/ui/Dialog";
 
 type DeleteExchangerDialogProps = {
