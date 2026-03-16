@@ -62,9 +62,7 @@ export function DealsSection({ collectionId, deals }: DealsSectionProps) {
                           : new Date(deal.revertedAt),
                       )}`
                     : `Created ${formatDate(
-                        deal.createdAt instanceof Date
-                          ? deal.createdAt
-                          : new Date(deal.createdAt),
+                        deal.createdAt instanceof Date ? deal.createdAt : new Date(deal.createdAt),
                       )}`
                 }
                 ins={deal.inNumbers}

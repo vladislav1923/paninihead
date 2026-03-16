@@ -14,7 +14,7 @@ export function Card({ name, date, ins, outs, children = null, className }: Card
   return (
     <div
       className={cn(
-        "flex flex-col gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-sm text-card-foreground",
+        "flex flex-col gap-1.5 rounded-lg border border-border bg-card px-3 py-2 text-sm text-card-foreground ",
         className,
       )}
     >

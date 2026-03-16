@@ -1,4 +1,4 @@
-/* Reverted deal: plain CSS so browser always has the rules */
+/* Reverted deal card: plain CSS so styles always apply (Tailwind override unreliable here) */
 .revertedWrapper {
   border-radius: 0.5rem;
   background-color: #fef2f2;
@@ -16,4 +16,3 @@
 :global(.dark) .revertedCard {
   border-color: rgb(127 29 29 / 0.3);
 }
-
