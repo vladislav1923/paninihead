@@ -20,7 +20,9 @@ export function Card({ name, date, ins, outs, children = null, className }: Card
     >
       <div className="flex items-center justify-between gap-2">
         <span className="min-w-0 font-medium text-foreground">{name}</span>
-        {children != null ? <div className="flex shrink-0 items-center gap-0.5">{children}</div> : null}
+        {children != null ? (
+          <div className="flex shrink-0 items-center gap-0.5">{children}</div>
+        ) : null}
       </div>
       <span className="text-muted-foreground">{date}</span>
       <p className="text-sm">
@@ -30,7 +32,11 @@ export function Card({ name, date, ins, outs, children = null, className }: Card
       </p>
       {ins.length > 0 && (
         <p className="inline-flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
-          <ArrowRight size={12} className="shrink-0 text-green-600 dark:text-green-400" aria-hidden />
+          <ArrowRight
+            size={12}
+            className="shrink-0 text-green-600 dark:text-green-400"
+            aria-hidden
+          />
           {ins.join(", ")}
         </p>
       )}

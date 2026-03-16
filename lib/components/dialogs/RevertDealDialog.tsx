@@ -58,7 +58,12 @@ export function RevertDealDialog({
           <Button type="button" variant="outline" onClick={handleCancel} disabled={isReverting}>
             Cancel
           </Button>
-          <Button type="button" variant="destructive" onClick={handleConfirm} disabled={isReverting}>
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={handleConfirm}
+            disabled={isReverting}
+          >
             {isReverting ? "Reverting…" : "Revert"}
           </Button>
         </div>

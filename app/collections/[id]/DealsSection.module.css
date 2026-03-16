@@ -4,15 +4,21 @@
   background-color: #fef2f2;
 }
 
+/* biome-ignore lint/correctness/noUnknownPseudoClass: CSS modules :global() for dark mode */
 :global(.dark) .revertedWrapper {
   background-color: rgb(69 10 10 / 0.4);
 }
 
 .revertedCard {
-  background-color: transparent !important;
   border-color: rgb(254 202 202 / 0.5);
 }
 
+/* Higher specificity so transparent overrides Card's bg-card without !important */
+.revertedWrapper .revertedCard {
+  background-color: transparent;
+}
+
+/* biome-ignore lint/correctness/noUnknownPseudoClass: CSS modules :global() for dark mode */
 :global(.dark) .revertedCard {
   border-color: rgb(127 29 29 / 0.3);
 }

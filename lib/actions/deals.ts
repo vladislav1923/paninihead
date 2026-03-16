@@ -111,8 +111,7 @@ export async function revertDeal(collectionId: string, dealId: string): Promise<
     collected.push(n);
   }
 
-  const isCompleted =
-    collection.total > 0 && new Set(collected).size >= collection.total;
+  const isCompleted = collection.total > 0 && new Set(collected).size >= collection.total;
 
   await db.$transaction([
     db.deals.update({

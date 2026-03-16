@@ -4,7 +4,7 @@ import { ExternalLink, Handshake, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
-import type { Exchangers } from "@/generated/prisma/client";
+import type { Exchangers as ExchangersModel } from "@/generated/prisma/client";
 import { AddExchangerDialog } from "@/lib/components/dialogs/AddExchangerDialog";
 import { DeleteExchangerDialog } from "@/lib/components/dialogs/DeleteExchangerDialog";
 import { MakeDealDialog } from "@/lib/components/dialogs/MakeDealDialog";
@@ -13,7 +13,7 @@ import { Card } from "@/lib/components/ui/Card";
 import { formatDate } from "@/lib/utilities/date";
 import { cn } from "@/lib/utilities/styles";
 
-type SerializedExchanger = Omit<Exchangers, "createdAt"> & {
+type SerializedExchanger = Omit<ExchangersModel, "createdAt"> & {
   createdAt: Date | string;
 };
 
@@ -24,7 +24,7 @@ function countBy(arr: number[]): Map<number, number> {
 }
 
 function getInAndOutNumbers(
-  exchanger: Pick<Exchangers, "has" | "needs">,
+  exchanger: Pick<ExchangersModel, "has" | "needs">,
   collected: number[],
 ) {
   const collectedSet = new Set(collected);
@@ -45,16 +45,12 @@ type ExchangersSectionProps = {
   collected: number[];
 };
 
-export function ExchangersSection({
-  collectionId,
-  exchangers,
-  collected,
-}: ExchangersSectionProps) {
+export function ExchangersSection({ collectionId, exchangers, collected }: ExchangersSectionProps) {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingExchanger, setEditingExchanger] = useState<Exchangers | null>(null);
-  const [exchangerToDelete, setExchangerToDelete] = useState<Exchangers | null>(null);
-  const [exchangerForDeal, setExchangerForDeal] = useState<Exchangers | null>(null);
+  const [editingExchanger, setEditingExchanger] = useState<ExchangersModel | null>(null);
+  const [exchangerToDelete, setExchangerToDelete] = useState<ExchangersModel | null>(null);
+  const [exchangerForDeal, setExchangerForDeal] = useState<ExchangersModel | null>(null);
 
   const handleDialogOpenChange = useCallback((open: boolean) => {
     setDialogOpen(open);
@@ -65,16 +61,16 @@ export function ExchangersSection({
     if (!open) setExchangerToDelete(null);
   }, []);
 
-  const handleEdit = useCallback((exchanger: Exchangers) => {
+  const handleEdit = useCallback((exchanger: ExchangersModel) => {
     setEditingExchanger(exchanger);
     setDialogOpen(true);
   }, []);
 
-  const handleDelete = useCallback((exchanger: Exchangers) => {
+  const handleDelete = useCallback((exchanger: ExchangersModel) => {
     setExchangerToDelete(exchanger);
   }, []);
 
-  const handleMakeDeal = useCallback((exchanger: Exchangers) => {
+  const handleMakeDeal = useCallback((exchanger: ExchangersModel) => {
     setExchangerForDeal(exchanger);
   }, []);
 
