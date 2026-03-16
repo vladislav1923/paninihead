@@ -4,8 +4,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createDeal } from "@/lib/actions/deals";
-import { Button } from "@/lib/components/ui/Button";
-import { Label } from "@/lib/components/ui/Label";
+import { Button } from "@/lib/components/ui/button";
+import { Label } from "@/lib/components/ui/label";
 import type { DealFormValues } from "@/lib/schemas/deal";
 import { dealFormSchema } from "@/lib/schemas/deal";
 

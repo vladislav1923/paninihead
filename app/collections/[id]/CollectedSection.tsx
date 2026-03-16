@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CollectedForm } from "@/lib/components/forms/CollectedForm";
-import { Button } from "@/lib/components/ui/Button";
+import { Button } from "@/lib/components/ui/button";
 import { Dialog } from "@/lib/components/ui/Dialog";
 import { cn } from "@/lib/utilities/styles";
 

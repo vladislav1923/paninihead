@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { CollectedSection } from "@/app/collections/[id]/CollectedSection";
 import { DealsSection, type DealWithExchanger } from "@/app/collections/[id]/DealsSection";
 import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
-import { Badge } from "@/lib/components/ui/Badge";
+import { Badge } from "@/lib/components/ui/badge";
 import { db } from "@/lib/utilities/db";
 
 export default async function CollectionPage({ params }: { params: Promise<{ id: string }> }) {

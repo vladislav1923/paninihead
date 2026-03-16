@@ -4,9 +4,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createExchanger, updateExchanger } from "@/lib/actions/exchangers";
-import { Button } from "@/lib/components/ui/Button";
-import { Input } from "@/lib/components/ui/Input";
-import { Label } from "@/lib/components/ui/Label";
+import { Button } from "@/lib/components/ui/button";
+import { Input } from "@/lib/components/ui/input";
+import { Label } from "@/lib/components/ui/label";
 import { type AddExchangerFormValues, addExchangerSchema } from "@/lib/schemas/exchanger";
 import { cn } from "@/lib/utilities/styles";
 

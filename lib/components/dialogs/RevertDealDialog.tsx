@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import { revertDeal } from "@/lib/actions/deals";
-import { Button } from "@/lib/components/ui/Button";
+import { Button } from "@/lib/components/ui/button";
 import { Dialog } from "@/lib/components/ui/Dialog";
 
 type RevertDealDialogProps = {

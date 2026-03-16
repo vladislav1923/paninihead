@@ -1,8 +1,8 @@
 "use client";
 
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
-import { Input } from "@/lib/components/ui/Input";
-import { Label } from "@/lib/components/ui/Label";
+import { Input } from "@/lib/components/ui/input";
+import { Label } from "@/lib/components/ui/label";
 import type { CreateCollectionFormInput } from "@/lib/schemas/collection";
 import { IMAGE_URL_MAX, NAME_MAX, TOTAL_MAX } from "@/lib/schemas/collection";
 

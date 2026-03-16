@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { DealStatus } from "@/generated/prisma/enums";
 import { RevertDealDialog } from "@/lib/components/dialogs/RevertDealDialog";
-import { Button } from "@/lib/components/ui/Button";
-import { Card } from "@/lib/components/ui/Card";
+import { Button } from "@/lib/components/ui/button";
+import { Card } from "@/lib/components/ui/card";
 import { formatDate } from "@/lib/utilities/date";
 import styles from "./DealsSection.module.css";
 

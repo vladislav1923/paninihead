@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createCollection } from "@/lib/actions/collections";
 import { CollectionForm } from "@/lib/components/forms/CollectionForm";
-import { Button } from "@/lib/components/ui/Button";
+import { Button } from "@/lib/components/ui/button";
 import type { CreateCollectionFormInput } from "@/lib/schemas/collection";
 import { createCollectionSchema } from "@/lib/schemas/collection";
 
