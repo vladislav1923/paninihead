@@ -1,5 +1,7 @@
 "use client";
 
+import { ExternalLink, Handshake, Pencil, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import type { Exchangers } from "@/generated/prisma/client";
@@ -7,34 +9,46 @@ import { AddExchangerDialog } from "@/lib/components/dialogs/AddExchangerDialog"
 import { DeleteExchangerDialog } from "@/lib/components/dialogs/DeleteExchangerDialog";
 import { MakeDealDialog } from "@/lib/components/dialogs/MakeDealDialog";
 import { Button } from "@/lib/components/ui/button";
-import { ExchangerCard } from "@/lib/components/ui/ExchangerCard";
+import { Card } from "@/lib/components/ui/Card";
 import { formatDate } from "@/lib/utilities/date";
+import { cn } from "@/lib/utilities/styles";
 
 type SerializedExchanger = Omit<Exchangers, "createdAt"> & {
   createdAt: Date | string;
 };
 
-type DealWithExchanger = {
-  id: string;
-  exchangerId: string;
-  inNumbers: number[];
-  outNumbers: number[];
-  createdAt: Date | string;
-  exchanger: { name: string };
-};
+function countBy(arr: number[]): Map<number, number> {
+  const m = new Map<number, number>();
+  for (const n of arr) m.set(n, (m.get(n) ?? 0) + 1);
+  return m;
+}
+
+function getInAndOutNumbers(
+  exchanger: Pick<Exchangers, "has" | "needs">,
+  collected: number[],
+) {
+  const collectedSet = new Set(collected);
+  const collectedCounts = countBy(collected);
+  const needCounts = countBy(exchanger.needs);
+  const inNumbers = exchanger.has.filter(n => !collectedSet.has(n));
+  const outNumbers: number[] = [];
+  for (const [n, needCount] of needCounts) {
+    const give = Math.min(collectedCounts.get(n) ?? 0, needCount);
+    for (let i = 0; i < give; i++) outNumbers.push(n);
+  }
+  return { inNumbers, outNumbers };
+}
 
 type ExchangersSectionProps = {
   collectionId: string;
   exchangers: SerializedExchanger[];
   collected: number[];
-  deals: DealWithExchanger[];
 };
 
 export function ExchangersSection({
   collectionId,
   exchangers,
   collected,
-  deals,
 }: ExchangersSectionProps) {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -107,51 +121,72 @@ export function ExchangersSection({
         onSuccess={() => router.refresh()}
       />
       <ul className="flex flex-col gap-4">
-        {exchangers.map(exchanger => (
-          <li key={exchanger.id}>
-            <ExchangerCard
-              exchanger={{
-                ...exchanger,
-                createdAt:
-                  exchanger.createdAt instanceof Date
-                    ? exchanger.createdAt
-                    : new Date(exchanger.createdAt),
-              }}
-              collected={collected}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onMakeDeal={handleMakeDeal}
-            />
-          </li>
-        ))}
+        {exchangers.map(exchanger => {
+          const exchangerWithDate = {
+            ...exchanger,
+            createdAt:
+              exchanger.createdAt instanceof Date
+                ? exchanger.createdAt
+                : new Date(exchanger.createdAt),
+          };
+          const { inNumbers, outNumbers } = getInAndOutNumbers(exchangerWithDate, collected);
+          return (
+            <li key={exchanger.id}>
+              <Card
+                name={exchanger.name}
+                date={`Created ${formatDate(exchangerWithDate.createdAt)}`}
+                ins={inNumbers}
+                outs={outNumbers}
+              >
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="size-8 text-green-600 dark:text-green-400 hover:bg-green-500/10 hover:text-green-600 dark:hover:text-green-400"
+                  onClick={() => handleMakeDeal(exchangerWithDate)}
+                  aria-label={`Make deal with ${exchanger.name}`}
+                >
+                  <Handshake className="size-4" aria-hidden />
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="size-8 text-muted-foreground hover:text-foreground"
+                  onClick={() => handleEdit(exchangerWithDate)}
+                  aria-label={`Edit ${exchanger.name}`}
+                >
+                  <Pencil className="size-4" aria-hidden />
+                </Button>
+                <Link
+                  href={exchanger.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${exchanger.name} link in new tab`}
+                  className={cn(
+                    "rounded-lg p-1.5 text-muted-foreground transition-colors",
+                    "hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  )}
+                >
+                  <ExternalLink className="size-4" aria-hidden />
+                </Link>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="size-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                  onClick={() => handleDelete(exchangerWithDate)}
+                  aria-label={`Delete ${exchanger.name}`}
+                >
+                  <Trash2 className="size-4" aria-hidden />
+                </Button>
+              </Card>
+            </li>
+          );
+        })}
       </ul>
       {exchangers.length === 0 && (
         <p className="text-sm text-muted-foreground">No exchangers yet.</p>
-      )}
-
-      {deals.length > 0 && (
-        <div className="mt-8">
-          <h3 className="mb-3 text-sm font-medium text-foreground">Deals</h3>
-          <ul className="flex flex-col gap-2">
-            {deals.map(deal => (
-              <li
-                key={deal.id}
-                className="rounded-lg border border-border bg-card px-3 py-2 text-sm text-card-foreground"
-              >
-                <span className="font-medium">{deal.exchanger.name}</span>
-                <span className="text-muted-foreground">
-                  {" "}
-                  — In: {deal.inNumbers.join(", ")} → Out: {deal.outNumbers.join(", ")}
-                </span>
-                <span className="ml-2 text-muted-foreground">
-                  {formatDate(
-                    deal.createdAt instanceof Date ? deal.createdAt : new Date(deal.createdAt),
-                  )}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
       )}
     </section>
   );

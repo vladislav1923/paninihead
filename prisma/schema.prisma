@@ -18,6 +18,11 @@ enum CollectionStatus {
   Completed
 }
 
+enum DealStatus {
+  Completed
+  Reverted
+}
+
 model Collections {
   id          String       @id @default(cuid())
   name        String
@@ -52,5 +57,7 @@ model Deals {
   exchanger    Exchangers  @relation(fields: [exchangerId], references: [id], onDelete: Cascade)
   inNumbers    Int[]
   outNumbers   Int[]
+  status       DealStatus  @default(Completed)
   createdAt    DateTime    @default(now())
+  revertedAt   DateTime?
 }

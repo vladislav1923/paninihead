@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { CollectionStatus } from "@/generated/prisma/enums";
+import { CollectionStatus, DealStatus } from "@/generated/prisma/enums";
 import { dealFormSchema, parseCommaSeparatedNumbers } from "@/lib/schemas/deal";
 import { db } from "@/lib/utilities/db";
 import { validateFormSchema } from "@/lib/utilities/validation";
@@ -79,6 +79,53 @@ export async function createDeal(
     db.exchangers.update({
       where: { id: exchangerId, collectionId },
       data: { has: newHas, needs: newNeeds },
+    }),
+  ]);
+
+  revalidatePath(`/collections/${collectionId}`);
+  return { ok: true };
+}
+
+export async function revertDeal(collectionId: string, dealId: string): Promise<Result> {
+  const deal = await db.deals.findFirst({
+    where: { id: dealId, collectionId },
+    select: { inNumbers: true, outNumbers: true, status: true },
+  });
+  if (!deal) return { ok: false, errors: { _: "Deal not found" } };
+  if (deal.status !== DealStatus.Completed) {
+    return { ok: false, errors: { _: "Deal is already reverted" } };
+  }
+
+  const collection = await db.collections.findUnique({
+    where: { id: collectionId },
+    select: { collected: true, total: true },
+  });
+  if (!collection) return { ok: false, errors: { _: "Collection not found" } };
+
+  const collected = [...(collection.collected ?? [])];
+  for (const n of deal.inNumbers) {
+    const i = collected.indexOf(n);
+    if (i !== -1) collected.splice(i, 1);
+  }
+  for (const n of deal.outNumbers) {
+    collected.push(n);
+  }
+
+  const isCompleted =
+    collection.total > 0 && new Set(collected).size >= collection.total;
+
+  await db.$transaction([
+    db.deals.update({
+      where: { id: dealId },
+      data: { status: DealStatus.Reverted, revertedAt: new Date() },
+    }),
+    db.collections.update({
+      where: { id: collectionId },
+      data: {
+        collected,
+        status: isCompleted ? CollectionStatus.Completed : CollectionStatus.InProgress,
+        completedAt: isCompleted ? new Date() : null,
+      },
     }),
   ]);
 

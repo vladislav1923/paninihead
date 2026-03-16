@@ -1,0 +1,19 @@
+/* Reverted deal: plain CSS so browser always has the rules */
+.revertedWrapper {
+  border-radius: 0.5rem;
+  background-color: #fef2f2;
+}
+
+:global(.dark) .revertedWrapper {
+  background-color: rgb(69 10 10 / 0.4);
+}
+
+.revertedCard {
+  background-color: transparent !important;
+  border-color: rgb(254 202 202 / 0.5);
+}
+
+:global(.dark) .revertedCard {
+  border-color: rgb(127 29 29 / 0.3);
+}
+

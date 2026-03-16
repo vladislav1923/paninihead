@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CollectedPreview } from "@/app/collections/[id]/CollectedPreview";
+import { CollectedSection } from "@/app/collections/[id]/CollectedSection";
+import { DealsSection, type DealWithExchanger } from "@/app/collections/[id]/DealsSection";
 import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
 import { Badge } from "@/lib/components/ui/badge";
 import { db } from "@/lib/utilities/db";
@@ -51,10 +52,14 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
 
         <div className="grid grid-cols-1 gap-8 min-[900px]:grid-cols-2">
           <section className="min-w-0">
-            <CollectedPreview
+            <CollectedSection
               collectionId={collection.id}
               collected={collection.collected}
               total={collection.total}
+            />
+            <DealsSection
+              collectionId={collection.id}
+              deals={(collection.deals ?? []) as unknown as DealWithExchanger[]}
             />
           </section>
 
@@ -62,7 +67,6 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
             collectionId={collection.id}
             exchangers={collection.exchangers}
             collected={collectedArr}
-            deals={collection.deals}
           />
         </div>
       </main>

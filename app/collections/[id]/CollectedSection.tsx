@@ -7,13 +7,13 @@ import { Button } from "@/lib/components/ui/button";
 import { Dialog } from "@/lib/components/ui/Dialog";
 import { cn } from "@/lib/utilities/styles";
 
-type CollectedPreviewProps = {
+type CollectedSectionProps = {
   collectionId: string;
   collected: number[];
   total: number;
 };
 
-export function CollectedPreview({ collectionId, collected, total }: CollectedPreviewProps) {
+export function CollectedSection({ collectionId, collected, total }: CollectedSectionProps) {
   const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
 
