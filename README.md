@@ -1,5 +1,5 @@
 # PaniniHead
-## A service to track your collections and make deals with exchangers
+## A pet project to track your collections and make deals with exchangers
 
 ### Start the database
 
