@@ -1,7 +1,7 @@
 # PaniniHead
 ## A pet project to track your collections and make deals with exchangers
 
-[![Lint](https://github.com/vladislav1923/paninihead/actions/workflows/lint.yml/badge.svg)](https://github.com/vladislav1923/paninihead/actions/workflows/lint.yml)
+[![Code Quality](https://github.com/vladislav1923/paninihead/actions/workflows/code-quality.yml/badge.svg)](https://github.com/vladislav1923/paninihead/actions/workflows/code-quality.yml)
 
 ### Start the database
 

@@ -114,8 +114,7 @@ export async function revertDeal(collectionId: string, dealId: string): Promise<
   const isCompleted = collection.total > 0 && new Set(collected).size >= collection.total;
 
   await db.$transaction([
-    db.deals.update(
-      {
+    db.deals.update({
       where: { id: dealId },
       data: { status: DealStatus.Reverted, revertedAt: new Date() },
     }),

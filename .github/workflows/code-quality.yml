@@ -1,4 +1,4 @@
-name: Lint
+name: Code Quality
 
 on:
   pull_request:
@@ -26,3 +26,6 @@ jobs:
 
       - name: Run linter
         run: corepack yarn lint
+
+      - name: Typecheck
+        run: corepack yarn typecheck
