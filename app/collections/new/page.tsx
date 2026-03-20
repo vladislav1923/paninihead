@@ -2,6 +2,7 @@
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ const defaultValues: CreateCollectionFormInput = {
 };
 
 export default function NewCollectionPage() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -31,7 +33,12 @@ export default function NewCollectionPage() {
   const onSubmit = async (data: CreateCollectionFormInput) => {
     try {
       const result = await createCollection(data);
-      if (result && !result.ok) {
+      if (result?.ok) {
+        router.push("/collections");
+        return;
+      }
+
+      if (result) {
         for (const [field, message] of Object.entries(result.errors)) {
           setError(field as keyof CreateCollectionFormInput, { message });
         }

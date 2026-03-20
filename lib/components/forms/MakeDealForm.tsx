@@ -52,7 +52,7 @@ export function MakeDealForm({
 
   const inVal = watch("in") ?? "";
   const outVal = watch("out") ?? "";
-  const canSave = inVal.trim().length > 0 && outVal.trim().length > 0;
+  const canSave = inVal.trim().length > 0 || outVal.trim().length > 0;
 
   const onSubmit = async (data: DealFormValues) => {
     try {
