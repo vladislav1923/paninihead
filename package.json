@@ -6,10 +6,11 @@
     "db:start": "docker compose up -d",
     "db:stop": "docker compose down",
     "dev": "next dev",
-    "build": "yarn lint && prisma generate && prisma migrate deploy && next build",
+    "build": "yarn typecheck && yarn lint && prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "format": "biome format --write .",
     "postinstall": "prisma generate"
   },
