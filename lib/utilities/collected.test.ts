@@ -1,8 +1,4 @@
-import {
-  getInNumbers,
-  getOutNumbers,
-  parseCommaSeparatedNumbers,
-} from "./collected";
+import { getInNumbers, getOutNumbers, parseCommaSeparatedNumbers } from "./collected";
 
 describe("parseCommaSeparatedNumbers", () => {
   it("returns empty array for empty or whitespace-only string", () => {
