@@ -12,6 +12,8 @@
     "lint:fix": "biome check --write .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "format": "biome format --write .",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -34,6 +36,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.6",
+    "@playwright/test": "^1.58.2",
     "@prisma/client": "^7.4.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
