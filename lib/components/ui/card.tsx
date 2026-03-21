@@ -1,4 +1,7 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
+"use client";
+
+import { ArrowLeft, ArrowRight, Copy } from "lucide-react";
+import { Button } from "@/lib/components/ui/button";
 import { cn } from "@/lib/utilities/styles";
 
 type CardProps = {
@@ -9,6 +12,15 @@ type CardProps = {
   children?: React.ReactNode | null;
   className?: string;
 };
+
+async function copyNumbers(text: string) {
+  try {
+    await navigator.clipboard.writeText(text);
+    alert("Copied to clipboard");
+  } catch {
+    alert("Could not copy");
+  }
+}
 
 export function Card({ name, date, ins, outs, children = null, className }: CardProps) {
   return (
@@ -31,19 +43,47 @@ export function Card({ name, date, ins, outs, children = null, className }: Card
         <span className="text-red-600 dark:text-red-400">{outs.length}</span>
       </p>
       {ins.length > 0 && (
-        <p className="inline-flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+        <p className="flex items-start gap-x-1 text-s leading-[24px] text-muted-foreground">
           <ArrowRight
-            size={12}
-            className="shrink-0 text-green-600 dark:text-green-400"
+            size={16}
+            className="shrink-0 text-green-600 dark:text-green-400 mt-[4px]"
             aria-hidden
           />
-          {ins.join(", ")}
+          <span className="min-w-0 flex-nowrap items-baseline gap-1">
+            <span>{ins.join(", ")}</span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              className="shrink-0 text-muted-foreground hover:text-foreground"
+              aria-label="Copy incoming numbers"
+              onClick={() => void copyNumbers(ins.join(", "))}
+            >
+              <Copy className="size-3" aria-hidden />
+            </Button>
+          </span>
         </p>
       )}
       {outs.length > 0 && (
-        <p className="inline-flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
-          <ArrowLeft size={12} className="shrink-0 text-red-600 dark:text-red-400" aria-hidden />
-          {outs.join(", ")}
+        <p className="flex items-start gap-x-1 text-s leading-[24px] text-muted-foreground">
+          <ArrowLeft
+            size={16}
+            className="shrink-0 text-red-600 dark:text-red-400 mt-[4px]"
+            aria-hidden
+          />
+          <span className="min-w-0 flex-nowrap items-baseline gap-1">
+            <span>{outs.join(", ")}</span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              className="shrink-0 text-muted-foreground hover:text-foreground"
+              aria-label="Copy outgoing numbers"
+              onClick={() => void copyNumbers(outs.join(", "))}
+            >
+              <Copy className="size-3" aria-hidden />
+            </Button>
+          </span>
         </p>
       )}
     </div>
