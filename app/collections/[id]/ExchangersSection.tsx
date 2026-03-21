@@ -11,7 +11,7 @@ import { MakeDealDialog } from "@/lib/components/dialogs/MakeDealDialog";
 import { Button } from "@/lib/components/ui/button";
 import { Card } from "@/lib/components/ui/card";
 import { formatDate } from "@/lib/utilities/date";
-import { getInNumbers, getOutNumbers } from "@/lib/utilities/exchanger";
+import { getInNumbers, getOutNumbers } from "@/lib/utilities/collected";
 import { cn } from "@/lib/utilities/styles";
 
 type SerializedExchanger = Omit<ExchangersModel, "createdAt"> & {

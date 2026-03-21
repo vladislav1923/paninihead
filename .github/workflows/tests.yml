@@ -6,6 +6,30 @@ on:
     branches: [ "main" ]
 
 jobs:
+  jest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup Yarn (Corepack)
+        run: |
+          corepack enable
+          corepack prepare yarn@4.9.1 --activate
+          corepack yarn --version
+
+      - name: Install dependencies
+        run: corepack yarn install --immutable
+
+      - name: Run unit tests
+        run: corepack yarn test
+        env:
+          CI: true
+
   playwright:
     runs-on: ubuntu-latest
     timeout-minutes: 15

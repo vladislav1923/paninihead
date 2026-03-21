@@ -3,7 +3,7 @@ import * as yup from "yup";
 const NAME_MAX = 50;
 const LINK_MAX = 300;
 
-export const commaSeparatedNumbers = yup
+export const collected = yup
   .string()
   .trim()
   .optional()
@@ -32,18 +32,8 @@ export const addExchangerSchema = yup.object({
     .required("Link is required.")
     .max(LINK_MAX, `Link must be at most ${LINK_MAX} characters.`)
     .trim(),
-  has: commaSeparatedNumbers,
-  needs: commaSeparatedNumbers,
+  has: collected,
+  needs: collected,
 });
 
 export type AddExchangerFormValues = yup.InferType<typeof addExchangerSchema>;
-
-export function parseCommaSeparatedNumbers(value: string): number[] {
-  if (!value || !value.trim()) return [];
-  return value
-    .split(",")
-    .map(s => s.trim())
-    .filter(Boolean)
-    .map(s => parseInt(s, 10))
-    .filter(n => !Number.isNaN(n));
-}

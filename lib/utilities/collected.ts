@@ -1,3 +1,13 @@
+export function parseCommaSeparatedNumbers(value: string): number[] {
+  if (!value || !value.trim()) return [];
+  return value
+    .split(",")
+    .map(s => s.trim())
+    .filter(Boolean)
+    .map(s => parseInt(s, 10))
+    .filter(n => !Number.isNaN(n));
+}
+
 function countBy(arr: number[]): Map<number, number> {
   const m = new Map<number, number>();
   for (const n of arr) m.set(n, (m.get(n) ?? 0) + 1);

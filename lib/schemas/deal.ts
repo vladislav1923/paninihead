@@ -1,11 +1,9 @@
 import * as yup from "yup";
-import { commaSeparatedNumbers, parseCommaSeparatedNumbers } from "@/lib/schemas/exchanger";
+import { collected } from "@/lib/schemas/exchanger";
 
 export const dealFormSchema = yup.object({
-  in: commaSeparatedNumbers,
-  out: commaSeparatedNumbers,
+  in: collected,
+  out: collected,
 });
 
 export type DealFormValues = yup.InferType<typeof dealFormSchema>;
-
-export { parseCommaSeparatedNumbers };

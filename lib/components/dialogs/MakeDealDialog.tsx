@@ -3,7 +3,7 @@
 import { useCallback, useMemo } from "react";
 import { MakeDealForm } from "@/lib/components/forms/MakeDealForm";
 import { Dialog } from "@/lib/components/ui/Dialog";
-import { getInNumbers, getOutNumbers } from "@/lib/utilities/exchanger";
+import { getInNumbers, getOutNumbers } from "@/lib/utilities/collected";
 
 type ExchangerForDeal = {
   id: string;

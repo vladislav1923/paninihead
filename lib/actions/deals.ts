@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { CollectionStatus, DealStatus } from "@/generated/prisma/enums";
-import { dealFormSchema, parseCommaSeparatedNumbers } from "@/lib/schemas/deal";
+import { dealFormSchema } from "@/lib/schemas/deal";
+import { parseCommaSeparatedNumbers } from "@/lib/utilities/collected";
 import { db } from "@/lib/utilities/db";
 import { logger } from "@/lib/utilities/logger";
 import { validateFormSchema } from "@/lib/utilities/validation";
