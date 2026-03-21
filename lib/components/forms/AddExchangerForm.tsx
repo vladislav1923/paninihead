@@ -8,26 +8,11 @@ import { Button } from "@/lib/components/ui/button";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
 import { type AddExchangerFormValues, addExchangerSchema } from "@/lib/schemas/exchanger";
+import { formatNumbersText } from "@/lib/utilities/format";
 import { cn } from "@/lib/utilities/styles";
 
 const textareaClassName =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30";
-
-function formatNumbersText(text: string): string {
-  if (!text.trim()) return "";
-  // 1. Remove content in parenthesis
-  let s = text.replace(/\([^)]*\)/g, "");
-  // 2. Remove all symbols that are not numbers, commas, or spaces
-  s = s.replace(/[^0-9,\s]/g, "");
-  // 3. Numbers divided by spaces → replace spaces with commas
-  s = s.replace(/\s+/g, ",");
-  // 4. Normalize: split by comma, trim, drop empty, join with single comma
-  const parts = s
-    .split(",")
-    .map(p => p.trim())
-    .filter(p => p.length > 0);
-  return parts.join(",");
-}
 
 const emptyDefaultValues: AddExchangerFormValues = {
   name: "",

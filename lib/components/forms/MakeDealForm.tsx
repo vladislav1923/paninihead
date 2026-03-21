@@ -8,17 +8,10 @@ import { Button } from "@/lib/components/ui/button";
 import { Label } from "@/lib/components/ui/label";
 import type { DealFormValues } from "@/lib/schemas/deal";
 import { dealFormSchema } from "@/lib/schemas/deal";
+import { formatNumbersText } from "@/lib/utilities/format";
 
 const textareaClassName =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/30";
-
-function formatNumbersText(text: string): string {
-  if (!text.trim()) return "";
-  let s = text.replace(/\([^)]*\)/g, "");
-  s = s.replace(/[^0-9,]/g, "");
-  const parts = s.split(",").filter(p => p.length > 0);
-  return parts.join(",");
-}
 
 type MakeDealFormProps = {
   collectionId: string;

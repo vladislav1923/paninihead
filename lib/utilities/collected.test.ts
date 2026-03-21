@@ -1,4 +1,44 @@
-import { getInNumbers, getOutNumbers, parseCommaSeparatedNumbers } from "./collected";
+import {
+  collectedToCounts,
+  countsToCollected,
+  getInNumbers,
+  getOutNumbers,
+  parseCommaSeparatedNumbers,
+} from "./collected";
+
+describe("collectedToCounts", () => {
+  it("returns empty map for empty array", () => {
+    expect([...collectedToCounts([])]).toEqual([]);
+  });
+
+  it("counts duplicates", () => {
+    const m = collectedToCounts([1, 2, 2, 3]);
+    expect(m.get(1)).toBe(1);
+    expect(m.get(2)).toBe(2);
+    expect(m.get(3)).toBe(1);
+  });
+});
+
+describe("countsToCollected", () => {
+  it("returns empty array when total is 0", () => {
+    expect(countsToCollected(new Map(), 0)).toEqual([]);
+  });
+
+  it("expands counts in order 1..total", () => {
+    const m = new Map<number, number>([
+      [1, 2],
+      [2, 0],
+      [3, 1],
+    ]);
+    expect(countsToCollected(m, 3)).toEqual([1, 1, 3]);
+  });
+
+  it("round-trips with collectedToCounts for valid range", () => {
+    const collected = [1, 1, 2, 4, 4, 4];
+    const total = 4;
+    expect(countsToCollected(collectedToCounts(collected), total)).toEqual(collected);
+  });
+});
 
 describe("parseCommaSeparatedNumbers", () => {
   it("returns empty array for empty or whitespace-only string", () => {

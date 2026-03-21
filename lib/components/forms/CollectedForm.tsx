@@ -5,6 +5,7 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { updateCollected } from "@/lib/actions/collections";
 import { Button } from "@/lib/components/ui/button";
+import { collectedToCounts, countsToCollected } from "@/lib/utilities/collected";
 import { cn } from "@/lib/utilities/styles";
 
 type CollectedFormProps = {
@@ -13,23 +14,6 @@ type CollectedFormProps = {
   initialCollected: number[];
   onSaved?: () => void;
 };
-
-function collectedToCounts(arr: number[]): Map<number, number> {
-  const m = new Map<number, number>();
-  for (const n of arr) {
-    m.set(n, (m.get(n) ?? 0) + 1);
-  }
-  return m;
-}
-
-function countsToCollected(counts: Map<number, number>, total: number): number[] {
-  const arr: number[] = [];
-  for (let n = 1; n <= total; n++) {
-    const c = counts.get(n) ?? 0;
-    for (let i = 0; i < c; i++) arr.push(n);
-  }
-  return arr;
-}
 
 type CellProps = {
   n: number;
