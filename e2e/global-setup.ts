@@ -1,7 +1,7 @@
 import { execSync } from "node:child_process";
-import pg from "pg";
-import { config } from "dotenv";
 import { join } from "node:path";
+import { config } from "dotenv";
+import pg from "pg";
 
 const root = process.cwd();
 

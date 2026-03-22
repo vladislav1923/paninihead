@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
-import { E2E_ORIGIN } from "./constants";
 import { nanoid } from "nanoid";
 import pg from "pg";
+import { E2E_ORIGIN } from "./constants";
 
 async function seedE2ECollection(collected: number[], total = 5): Promise<string> {
   const id = `Collection-${nanoid(5)}`;
