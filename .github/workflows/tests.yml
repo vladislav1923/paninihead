@@ -33,6 +33,22 @@ jobs:
   playwright:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: paninihead
+        options: >-
+          --health-cmd "pg_isready -U user -d paninihead"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    env:
+      POSTGRES_URL: postgresql://user:password@localhost:5432/paninihead
     steps:
       - uses: actions/checkout@v4
 
@@ -57,6 +73,9 @@ jobs:
 
       - name: Install Playwright Chromium
         run: corepack yarn exec playwright install chromium --with-deps
+
+      - name: Apply database migrations
+        run: corepack yarn exec prisma migrate deploy
 
       - name: Run Playwright tests
         run: corepack yarn test:e2e

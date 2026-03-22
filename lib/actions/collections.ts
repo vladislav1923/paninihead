@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { CollectionStatus } from "@/generated/prisma/enums";
 import { createCollectionSchema } from "@/lib/schemas/collection";
 import { db } from "@/lib/utilities/db";
@@ -30,6 +31,8 @@ export async function createCollection(raw: unknown): Promise<CreateCollectionRe
         collected: [],
       },
     });
+
+    revalidatePath("/collections");
 
     logger.info("Collection created successfully", { name });
 

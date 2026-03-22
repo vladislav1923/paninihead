@@ -1,0 +1,22 @@
+# Playwright Postgres — merge with the main file: `docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d`
+services:
+  db-e2e:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: paninihead_e2e
+    ports:
+      - "6001:5432"
+    volumes:
+      - postgres_data_e2e:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d paninihead_e2e"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+      start_period: 5s
+
+volumes:
+  postgres_data_e2e:
