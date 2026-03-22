@@ -9,18 +9,8 @@ import pg from "pg";
 
 const root = join(__dirname, "..");
 
-function loadEnv() {
-  config({ path: join(root, ".env") });
-}
-
-/** Connection string Playwright and the e2e Next server use for Postgres. */
-export function resolveE2EDatabaseUrl(): string {
-  loadEnv();
-  const url = process.env.POSTGRES_URL_E2E?.trim() || process.env.POSTGRES_URL?.trim();
-  if (!url) {
-    throw new Error("Missing POSTGRES_URL or POSTGRES_URL_E2E (see env.example).");
-  }
-  return url;
+export function loadEnv() {
+  config({ path: join(root, ".env.e2e") });
 }
 
 function redactConnectionString(urlStr: string): string {
@@ -42,7 +32,7 @@ function e2eDbRunHint(): string {
 
 /** Connects once; throws immediately if Postgres is not reachable. */
 export async function assertE2EDatabaseReady(): Promise<void> {
-  const url = resolveE2EDatabaseUrl();
+  const url = process.env.POSTGRES_URL as string;
   const client = new pg.Client({ connectionString: url });
   try {
     await client.connect();
@@ -63,7 +53,7 @@ export async function assertE2EDatabaseReady(): Promise<void> {
 
 /** Removes all app rows from the e2e database (also invoked from Playwright global setup after migrate). */
 export async function clearE2EDatabase(): Promise<void> {
-  const client = new pg.Client({ connectionString: resolveE2EDatabaseUrl() });
+  const client = new pg.Client({ connectionString: process.env.POSTGRES_URL });
   await client.connect();
   try {
     await client.query('TRUNCATE TABLE "Collections" CASCADE');
@@ -80,7 +70,7 @@ function randomCollectionId(): string {
 export async function seedE2ECollection(collected: number[], total = 5): Promise<string> {
   const id = randomCollectionId();
   const name = `D${Date.now()}`;
-  const client = new pg.Client({ connectionString: resolveE2EDatabaseUrl() });
+  const client = new pg.Client({ connectionString: process.env.POSTGRES_URL });
   await client.connect();
   try {
     await client.query(

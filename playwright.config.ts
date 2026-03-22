@@ -3,18 +3,7 @@ import { defineConfig, devices } from "@playwright/test";
 import { config as loadEnv } from "dotenv";
 
 const root = path.resolve(__dirname);
-loadEnv({ path: path.join(root, ".env") });
-loadEnv({ path: path.join(root, ".env.local"), override: true });
-
-function playwrightDatabaseUrl(): string {
-  const url = process.env.POSTGRES_URL_E2E?.trim() || process.env.POSTGRES_URL?.trim();
-  if (!url) {
-    throw new Error("Missing POSTGRES_URL or POSTGRES_URL_E2E for Playwright (see env.example).");
-  }
-  return url;
-}
-
-const postgresUrl = playwrightDatabaseUrl();
+loadEnv({ path: path.join(root, ".env.e2e") });
 
 export default defineConfig({
   testDir: "./e2e",
@@ -32,12 +21,7 @@ export default defineConfig({
   webServer: {
     command: "yarn dev --port 3001",
     url: "http://127.0.0.1:3001",
-    // When POSTGRES_URL_E2E is set, never reuse a server on :3001 — it may still be using the dev DB.
-    reuseExistingServer: process.env.CI ? false : !process.env.POSTGRES_URL_E2E?.trim(),
+    reuseExistingServer: process.env.CI ? false : !(process.env.POSTGRES_URL as string),
     timeout: 120_000,
-    env: {
-      ...process.env,
-      POSTGRES_URL: postgresUrl,
-    },
   },
 });
