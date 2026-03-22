@@ -7,7 +7,7 @@ loadEnv({ path: path.join(root, ".env.e2e") });
 
 export default defineConfig({
   testDir: "./e2e",
-  globalSetup: path.join(__dirname, "e2e/global-setup.ts"),
+  globalSetup: path.join(__dirname, "playwright.setup.ts"),
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

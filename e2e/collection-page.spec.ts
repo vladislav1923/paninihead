@@ -1,6 +1,8 @@
 import { expect, type Page, test } from "@playwright/test";
 import { nanoid } from "nanoid";
-import { E2E_ORIGIN } from "./constants";
+
+/** Must match `playwright.config.ts` use.baseURL (origin only). */
+const E2E_ORIGIN = "http://127.0.0.1:3001";
 
 async function createCollectionAndOpenDetail(
   page: Page,
