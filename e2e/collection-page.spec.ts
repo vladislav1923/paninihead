@@ -1,24 +1,86 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import { nanoid } from "nanoid";
-import pg from "pg";
 import { E2E_ORIGIN } from "./constants";
 
-async function seedE2ECollection(collected: number[], total = 5): Promise<string> {
-  const id = `Collection-${nanoid(5)}`;
-  const name = `D${Date.now()}`;
-  const client = new pg.Client({ connectionString: process.env.POSTGRES_URL });
-  await client.connect();
-  try {
-    await client.query(
-      `INSERT INTO "Collections" (id, name, status, total, collected, "createdAt")
-       VALUES ($1, $2, 'InProgress'::"CollectionStatus", $3, $4, NOW())`,
-      [id, name, total, collected],
-    );
-    return id;
-  } finally {
-    await client.end();
-  }
+async function createCollectionAndOpenDetail(
+  page: Page,
+  total = "5",
+): Promise<{ name: string; url: string }> {
+  const name = `Collection-${nanoid(5)}`;
+  await page.goto(`${E2E_ORIGIN}/collections/new`);
+  await page.getByLabel(/name/i).fill(name);
+  await page.getByLabel(/total/i).fill(total);
+  await page.getByRole("button", { name: "Create collection" }).click();
+  await expect(page).toHaveURL(/\/collections\/?$/);
+  await page
+    .getByRole("listitem")
+    .filter({ has: page.getByText(name, { exact: true }) })
+    .getByRole("link")
+    .click();
+  await expect(page).toHaveURL(/\/collections\/[^/]+\/?$/);
+  return { name, url: page.url() };
 }
+
+async function addTwoOfSticker(page: Page, n: number): Promise<void> {
+  await page.getByRole("button", { name: "Add Stickers" }).click();
+  const dialog = page.getByRole("dialog", { name: "Add Stickers" });
+  await expect(dialog).toBeVisible();
+  const add = dialog.getByRole("button", { name: `Add one of ${n}` });
+  await add.click();
+  await add.click();
+  await dialog.getByRole("button", { name: "Save" }).click();
+  await expect(dialog).toBeHidden({ timeout: 15_000 });
+}
+
+test.describe("Collection page", () => {
+  let collectionName: string;
+
+  test.beforeEach(async ({ page }) => {
+    const created = await createCollectionAndOpenDetail(page);
+    collectionName = created.name;
+  });
+
+  test("shows collection name as page title", async ({ page }) => {
+    await expect(page.getByRole("heading", { level: 1, name: collectionName })).toBeVisible();
+  });
+
+  test("shows in-progress badge for new collection", async ({ page }) => {
+    await expect(page.getByText("IN PROGRESS", { exact: true })).toBeVisible();
+  });
+
+  test("shows collected progress", async ({ page }) => {
+    await expect(page.getByText("0 / 5 collected", { exact: true })).toBeVisible();
+  });
+
+  test("shows Add Stickers control", async ({ page }) => {
+    await expect(page.getByRole("button", { name: "Add Stickers" })).toBeVisible();
+  });
+
+  test("shows exchangers section", async ({ page }) => {
+    await expect(page.getByRole("heading", { name: "Exchangers" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Add Exchanger" })).toBeVisible();
+  });
+
+  test("back link returns to collections list", async ({ page }) => {
+    await page.getByRole("link", { name: /Back to collections/i }).click();
+    await expect(page).toHaveURL(/\/collections\/?$/);
+    await expect(page.getByRole("heading", { level: 1, name: "Collections" })).toBeVisible();
+  });
+
+  test("main wraps primary content", async ({ page }) => {
+    await expect(page.getByRole("main")).toBeVisible();
+    await expect(
+      page.getByRole("main").getByRole("heading", { level: 1, name: collectionName }),
+    ).toBeVisible();
+  });
+});
+
+test.describe("Collection 404", () => {
+  test("responds with not found for unknown id", async ({ page }) => {
+    const response = await page.goto("/collections/clnonexistent00000000000000000");
+    expect(response?.status(), "expected HTTP 404").toBe(404);
+  });
+});
 
 test.describe("Collection exchangers", () => {
   test.describe.configure({ mode: "serial" });
@@ -28,9 +90,12 @@ test.describe("Collection exchangers", () => {
 
   let collectionPageUrl: string;
 
-  test.beforeAll(async () => {
-    const id = await seedE2ECollection([]);
-    collectionPageUrl = `${E2E_ORIGIN}/collections/${id}`;
+  test.beforeAll(async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const { url } = await createCollectionAndOpenDetail(page);
+    collectionPageUrl = url;
+    await context.close();
   });
 
   test("creates an exchanger", async ({ page }) => {
@@ -77,9 +142,13 @@ test.describe("Collection deals", () => {
 
   let collectionPageUrl: string;
 
-  test.beforeAll(async () => {
-    const id = await seedE2ECollection([2, 2]);
-    collectionPageUrl = `${E2E_ORIGIN}/collections/${id}`;
+  test.beforeAll(async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const { url } = await createCollectionAndOpenDetail(page);
+    await addTwoOfSticker(page, 2);
+    collectionPageUrl = url;
+    await context.close();
   });
 
   test("creates an exchanger for deal flow", async ({ page }) => {
