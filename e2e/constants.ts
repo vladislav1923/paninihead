@@ -1,0 +1,2 @@
+/** Must match `playwright.config.ts` use.baseURL (origin only). */
+export const E2E_ORIGIN = "http://127.0.0.1:3001";

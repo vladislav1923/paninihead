@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { openCollectionDetailFromList, uniqueE2ECollectionName } from "./playwright-utils";
+import { nanoid } from "nanoid";
 
 test.describe("New collection page", () => {
   test.beforeEach(async ({ page }) => {
@@ -51,7 +51,7 @@ test.describe("New collection page", () => {
   });
 
   test("creates collection and navigates to list", async ({ page }) => {
-    const name = uniqueE2ECollectionName();
+    const name = `Collection-${nanoid(5)}`;
     await page.getByLabel(/name/i).fill(name);
     await page.getByLabel(/total/i).fill("10");
     await page.getByRole("button", { name: "Create collection" }).click();

@@ -1,14 +1,18 @@
 import { expect, type Page, test } from "@playwright/test";
-import { openCollectionDetailFromList, uniqueE2ECollectionName } from "./playwright-utils";
+import { nanoid } from "nanoid";
 
 async function createCollectionAndOpenDetail(page: Page, total = "5"): Promise<string> {
-  const name = uniqueE2ECollectionName();
+  const name = `Collection-${nanoid(5)}`;
   await page.goto("/collections/new");
   await page.getByLabel(/name/i).fill(name);
   await page.getByLabel(/total/i).fill(total);
   await page.getByRole("button", { name: "Create collection" }).click();
   await expect(page).toHaveURL(/\/collections\/?$/);
-  await openCollectionDetailFromList(page, name);
+  await page
+    .getByRole("listitem")
+    .filter({ has: page.getByText(name, { exact: true }) })
+    .getByRole("link")
+    .click();
   await expect(page).toHaveURL(/\/collections\/[^/]+\/?$/);
   return name;
 }

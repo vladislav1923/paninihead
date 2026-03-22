@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { e2eCollectionPageUrl } from "./playwright-utils";
+import { E2E_ORIGIN } from "./constants";
 import { seedE2ECollection } from "./postgres";
 
 test.describe("Collection deals", () => {
@@ -12,7 +12,7 @@ test.describe("Collection deals", () => {
 
   test.beforeAll(async () => {
     const id = await seedE2ECollection([2, 2]);
-    collectionPageUrl = e2eCollectionPageUrl(id);
+    collectionPageUrl = `${E2E_ORIGIN}/collections/${id}`;
   });
 
   test("creates an exchanger for deal flow", async ({ page }) => {
