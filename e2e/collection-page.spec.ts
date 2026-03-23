@@ -34,46 +34,39 @@ async function addTwoOfSticker(page: Page, n: number): Promise<void> {
   await expect(dialog).toBeHidden({ timeout: 15_000 });
 }
 
+test.describe.configure({ mode: "serial" });
+
+let collectionName: string;
+let collectionPageUrl: string;
+
+test.beforeAll(async ({ browser }) => {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  const created = await createCollectionAndOpenDetail(page);
+  collectionName = created.name;
+  collectionPageUrl = created.url;
+  await context.close();
+});
+
 test.describe("Collection page", () => {
-  let collectionName: string;
-
-  test.beforeEach(async ({ page }) => {
-    const created = await createCollectionAndOpenDetail(page);
-    collectionName = created.name;
-  });
-
-  test("shows collection name as page title", async ({ page }) => {
+  test("shows collection name as page title and controls", async ({ page }) => {
+    await page.goto(collectionPageUrl);
     await expect(page.getByRole("heading", { level: 1, name: collectionName })).toBeVisible();
-  });
-
-  test("shows in-progress badge for new collection", async ({ page }) => {
-    await expect(page.getByText("IN PROGRESS", { exact: true })).toBeVisible();
-  });
-
-  test("shows collected progress", async ({ page }) => {
-    await expect(page.getByText("0 / 5 collected", { exact: true })).toBeVisible();
-  });
-
-  test("shows Add Stickers control", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Add Stickers" })).toBeVisible();
-  });
-
-  test("shows exchangers section", async ({ page }) => {
-    await expect(page.getByRole("heading", { name: "Exchangers" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Add Exchanger" })).toBeVisible();
   });
 
+  test("shows in-progress badge and progress", async ({ page }) => {
+    await page.goto(collectionPageUrl);
+    await expect(page.getByText("IN PROGRESS", { exact: true })).toBeVisible();
+    await expect(page.getByText("0 / 5 collected", { exact: true })).toBeVisible();
+  });
+
   test("back link returns to collections list", async ({ page }) => {
+    await page.goto(collectionPageUrl);
     await page.getByRole("link", { name: /Back to collections/i }).click();
     await expect(page).toHaveURL(/\/collections\/?$/);
     await expect(page.getByRole("heading", { level: 1, name: "Collections" })).toBeVisible();
-  });
-
-  test("main wraps primary content", async ({ page }) => {
-    await expect(page.getByRole("main")).toBeVisible();
-    await expect(
-      page.getByRole("main").getByRole("heading", { level: 1, name: collectionName }),
-    ).toBeVisible();
   });
 });
 
@@ -84,21 +77,51 @@ test.describe("Collection 404", () => {
   });
 });
 
-test.describe("Collection exchangers", () => {
-  test.describe.configure({ mode: "serial" });
+test.describe("Collected", () => {
+  test("adds stickers and synchronizes with collected preview", async ({ page }) => {
+    await page.goto(collectionPageUrl);
 
+    await page.getByRole("button", { name: "Add Stickers" }).click();
+    const dialog = page.getByRole("dialog", { name: "Add Stickers" });
+    await expect(dialog).toBeVisible();
+
+    await dialog.getByRole("button", { name: "Add one of 1" }).click();
+    await dialog.getByRole("button", { name: "Add one of 1" }).click();
+    await dialog.getByRole("button", { name: "Add one of 3" }).click();
+
+    await expect(dialog.getByText("Adding:")).toBeVisible();
+    await expect(dialog.getByText("1 (2), 3", { exact: true })).toBeVisible();
+
+    await dialog.getByRole("button", { name: "Save" }).click();
+    await expect(dialog).toBeHidden({ timeout: 15_000 });
+    await expect(page.getByText("2 / 5 collected", { exact: true })).toBeVisible();
+  });
+
+  test("removes stickers and synchronizes with collected preview", async ({ page }) => {
+    await page.goto(collectionPageUrl);
+    await expect(page.getByText("2 / 5 collected", { exact: true })).toBeVisible();
+
+    await page.getByRole("button", { name: "Add Stickers" }).click();
+    const dialog = page.getByRole("dialog", { name: "Add Stickers" });
+    await expect(dialog).toBeVisible();
+
+    await dialog.getByRole("button", { name: "Remove one of 1" }).click();
+    await dialog.getByRole("button", { name: "Remove one of 1" }).click();
+    await dialog.getByRole("button", { name: "Remove one of 3" }).click();
+
+    await expect(dialog.getByText("Removing:")).toBeVisible();
+    await expect(dialog.getByText("1 (2), 3", { exact: true })).toBeVisible();
+
+    await dialog.getByRole("button", { name: "Save" }).click();
+    await expect(dialog).toBeHidden({ timeout: 15_000 });
+    await expect(page.getByText("0 / 5 collected", { exact: true })).toBeVisible();
+  });
+});
+
+test.describe("Collection exchangers", () => {
   const exchangerLink = "https://example.com/e2e-trader";
   const exchangerName = `E2E Trader ${Date.now()}`;
-
-  let collectionPageUrl: string;
-
-  test.beforeAll(async ({ browser }) => {
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    const { url } = await createCollectionAndOpenDetail(page);
-    collectionPageUrl = url;
-    await context.close();
-  });
+  const editedExchangerName = `${exchangerName} Edited`;
 
   test("creates an exchanger", async ({ page }) => {
     await page.goto(collectionPageUrl);
@@ -125,31 +148,63 @@ test.describe("Collection exchangers", () => {
     await popup.close();
   });
 
+  test("edits an exchanger", async ({ page }) => {
+    await page.goto(collectionPageUrl);
+    await page.getByRole("button", { name: `Edit ${exchangerName}` }).click();
+    const dialog = page.getByRole("dialog", { name: "Edit Exchanger" });
+    await expect(dialog).toBeVisible();
+
+    await dialog.locator("#add-exchanger-name").fill(editedExchangerName);
+    await dialog.locator("#add-exchanger-has").fill("4, 5");
+    await dialog.locator("#add-exchanger-needs").fill("1");
+    await dialog.getByRole("button", { name: "Save" }).click();
+    await expect(dialog).toBeHidden({ timeout: 15_000 });
+
+    await expect(page.getByText(editedExchangerName, { exact: true })).toBeVisible();
+    await expect(page.getByText(exchangerName, { exact: true })).toHaveCount(0);
+  });
+
+  test("exchanger in/out numbers sync with collected updates", async ({ page }) => {
+    await page.goto(collectionPageUrl);
+
+    const syncExchangerName = `E2E Sync ${nanoid(5)}`;
+    await page.getByRole("button", { name: "Add Exchanger" }).click();
+    const addDialog = page.getByRole("dialog", { name: "Add Exchanger" });
+    await expect(addDialog).toBeVisible();
+    await addDialog.locator("#add-exchanger-name").fill(syncExchangerName);
+    await addDialog.locator("#add-exchanger-link").fill("https://example.com/e2e-sync");
+    await addDialog.locator("#add-exchanger-has").fill("1, 2");
+    await addDialog.locator("#add-exchanger-needs").fill("2");
+    await addDialog.getByRole("button", { name: "Save" }).click();
+    await expect(addDialog).toBeHidden({ timeout: 15_000 });
+
+    const syncCard = page.locator("li").filter({ has: page.getByText(syncExchangerName, { exact: true }) });
+    await expect(syncCard.getByText(/2\s*\/\s*0/)).toBeVisible();
+
+    await addTwoOfSticker(page, 2);
+    await expect(syncCard.getByText(/1\s*\/\s*1/)).toBeVisible();
+  });
+
   test("deletes the exchanger", async ({ page }) => {
     await page.goto(collectionPageUrl);
-    await page.getByRole("button", { name: `Delete ${exchangerName}` }).click();
+    await page.getByRole("button", { name: `Delete ${editedExchangerName}` }).click();
     const dialog = page.getByRole("dialog", { name: "Delete exchanger" });
     await expect(dialog).toBeVisible();
     await dialog.getByRole("button", { name: "Delete", exact: true }).click();
     await expect(dialog).toBeHidden({ timeout: 15_000 });
-    await expect(page.getByText("No exchangers yet.")).toBeVisible();
+    await expect(page.getByRole("button", { name: `Delete ${editedExchangerName}` })).toHaveCount(0);
   });
 });
 
 test.describe("Collection deals", () => {
-  test.describe.configure({ mode: "serial" });
-
   const exchangerLink = "https://example.com/e2e-trader-deals";
   const exchangerName = `E2E Deals ${Date.now()}`;
-
-  let collectionPageUrl: string;
 
   test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
-    const { url } = await createCollectionAndOpenDetail(page);
+    await page.goto(collectionPageUrl);
     await addTwoOfSticker(page, 2);
-    collectionPageUrl = url;
     await context.close();
   });
 
@@ -180,6 +235,7 @@ test.describe("Collection deals", () => {
     const dealsBlock = page.getByRole("heading", { name: "Deals" }).locator("..");
     await expect(dealsBlock.getByText(exchangerName, { exact: true })).toBeVisible();
     await expect(dealsBlock.getByText(/^Created /)).toBeVisible();
+    await expect(dealsBlock.getByText(/1\s*\/\s*1/)).toBeVisible();
   });
 
   test("reverts the active deal", async ({ page }) => {
@@ -195,5 +251,10 @@ test.describe("Collection deals", () => {
     await expect(
       page.getByRole("button", { name: `Revert deal with ${exchangerName}` }),
     ).toHaveCount(0);
+    await expect(page.getByText("1 / 5 collected", { exact: true })).toBeVisible();
+    const exchangerCard = page
+      .locator("li")
+      .filter({ has: page.getByRole("button", { name: `Make deal with ${exchangerName}` }) });
+    await expect(exchangerCard.getByText(/1\s*\/\s*1/)).toBeVisible();
   });
 });

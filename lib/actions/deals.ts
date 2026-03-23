@@ -121,7 +121,7 @@ export async function revertDeal(collectionId: string, dealId: string): Promise<
 
     const deal = await db.deals.findFirst({
       where: { id: dealId, collectionId },
-      select: { inNumbers: true, outNumbers: true, status: true },
+      select: { exchangerId: true, inNumbers: true, outNumbers: true, status: true },
     });
     if (!deal) {
       logger.error("Failed to find deal", { collectionId, dealId });
@@ -142,6 +142,12 @@ export async function revertDeal(collectionId: string, dealId: string): Promise<
     });
     if (!collection) return { ok: false, errors: { _: "Collection not found" } };
 
+    const exchanger = await db.exchangers.findUnique({
+      where: { id: deal.exchangerId, collectionId },
+      select: { has: true, needs: true },
+    });
+    if (!exchanger) return { ok: false, errors: { _: "Exchanger not found" } };
+
     const collected = [...(collection.collected ?? [])];
     for (const n of deal.inNumbers) {
       const i = collected.indexOf(n);
@@ -154,6 +160,8 @@ export async function revertDeal(collectionId: string, dealId: string): Promise<
     const isCompleted = collection.total > 0 && new Set(collected).size >= collection.total;
     const collectionStatus = isCompleted ? CollectionStatus.Completed : CollectionStatus.InProgress;
     const completedAt = isCompleted ? new Date() : null;
+    const restoredHas = Array.from(new Set([...exchanger.has, ...deal.inNumbers]));
+    const restoredNeeds = Array.from(new Set([...exchanger.needs, ...deal.outNumbers]));
 
     logger.info("Reverting deal with params", {
       collectionId,
@@ -173,6 +181,13 @@ export async function revertDeal(collectionId: string, dealId: string): Promise<
           collected,
           status: collectionStatus,
           completedAt,
+        },
+      }),
+      db.exchangers.update({
+        where: { id: deal.exchangerId, collectionId },
+        data: {
+          has: restoredHas,
+          needs: restoredNeeds,
         },
       }),
     ]);

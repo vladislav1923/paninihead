@@ -17,7 +17,7 @@ test.describe("Collections List Page", () => {
   });
 
   test("lists collections in a list", async ({ page }) => {
-    await expect(page.getByRole("main").getByRole("list")).toBeVisible();
+    await expect(page.getByRole("main").getByRole("list")).toHaveCount(1);
   });
 
   test("shows empty hint or at least one collection row", async ({ page }) => {
