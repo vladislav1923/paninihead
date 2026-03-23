@@ -178,7 +178,9 @@ test.describe("Collection exchangers", () => {
     await addDialog.getByRole("button", { name: "Save" }).click();
     await expect(addDialog).toBeHidden({ timeout: 15_000 });
 
-    const syncCard = page.locator("li").filter({ has: page.getByText(syncExchangerName, { exact: true }) });
+    const syncCard = page
+      .locator("li")
+      .filter({ has: page.getByText(syncExchangerName, { exact: true }) });
     await expect(syncCard.getByText(/2\s*\/\s*0/)).toBeVisible();
 
     await addTwoOfSticker(page, 2);
@@ -192,7 +194,9 @@ test.describe("Collection exchangers", () => {
     await expect(dialog).toBeVisible();
     await dialog.getByRole("button", { name: "Delete", exact: true }).click();
     await expect(dialog).toBeHidden({ timeout: 15_000 });
-    await expect(page.getByRole("button", { name: `Delete ${editedExchangerName}` })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: `Delete ${editedExchangerName}` })).toHaveCount(
+      0,
+    );
   });
 });
 
