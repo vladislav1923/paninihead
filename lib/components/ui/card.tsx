@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, ArrowRight, Copy } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/lib/components/ui/button";
 import { cn } from "@/lib/utilities/styles";
 
@@ -16,9 +17,9 @@ type CardProps = {
 async function copyNumbers(text: string) {
   try {
     await navigator.clipboard.writeText(text);
-    alert("Copied to clipboard");
+    toast.success("Copied to clipboard");
   } catch {
-    alert("Could not copy");
+    toast.error("Could not copy");
   }
 }
 
