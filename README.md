@@ -3,6 +3,8 @@
 
 [![Code Quality](https://github.com/vladislav1923/paninihead/actions/workflows/code-quality.yml/badge.svg)](https://github.com/vladislav1923/paninihead/actions/workflows/code-quality.yml)
 
+[![Tests](https://github.com/vladislav1923/paninihead/actions/workflows/tests.yml/badge.svg)](https://github.com/vladislav1923/paninihead/actions/workflows/tests.yml)
+
 ### Start the database
 
 `yarn db:start:dev`
