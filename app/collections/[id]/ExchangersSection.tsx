@@ -70,8 +70,7 @@ export function ExchangersSection({ collectionId, exchangers, collected }: Excha
   const sortedExchangers = useMemo(
     () =>
       [...exchangers].sort(
-        (a, b) =>
-          getInNumbers(b.has, collected).length - getInNumbers(a.has, collected).length,
+        (a, b) => getInNumbers(b.has, collected).length - getInNumbers(a.has, collected).length,
       ),
     [exchangers, collected],
   );
