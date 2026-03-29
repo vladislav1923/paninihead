@@ -3,7 +3,7 @@
 import { ExternalLink, Handshake, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { Exchangers as ExchangersModel } from "@/generated/prisma/client";
 import { AddExchangerDialog } from "@/lib/components/dialogs/AddExchangerDialog";
 import { DeleteExchangerDialog } from "@/lib/components/dialogs/DeleteExchangerDialog";
@@ -67,6 +67,15 @@ export function ExchangersSection({ collectionId, exchangers, collected }: Excha
     if (!open) setExchangerForDeal(null);
   }, []);
 
+  const sortedExchangers = useMemo(
+    () =>
+      [...exchangers].sort(
+        (a, b) =>
+          getInNumbers(b.has, collected).length - getInNumbers(a.has, collected).length,
+      ),
+    [exchangers, collected],
+  );
+
   return (
     <section className="min-w-0">
       <div className="mb-4 flex items-center justify-between gap-4">
@@ -106,7 +115,7 @@ export function ExchangersSection({ collectionId, exchangers, collected }: Excha
         onSuccess={() => router.refresh()}
       />
       <ul className="flex flex-col gap-4">
-        {exchangers.map(exchanger => {
+        {sortedExchangers.map(exchanger => {
           const exchangerWithDate = {
             ...exchanger,
             createdAt:
