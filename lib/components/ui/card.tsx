@@ -24,6 +24,9 @@ async function copyNumbers(text: string) {
 }
 
 export function Card({ name, date, ins, outs, children = null, className }: CardProps) {
+  const sortedIns = [...ins].sort((a, b) => a - b);
+  const sortedOuts = [...outs].sort((a, b) => a - b);
+
   return (
     <div
       className={cn(
@@ -39,11 +42,11 @@ export function Card({ name, date, ins, outs, children = null, className }: Card
       </div>
       <span className="text-muted-foreground">{date}</span>
       <p className="text-sm">
-        <span className="text-green-600 dark:text-green-400">{ins.length}</span>
+        <span className="text-green-600 dark:text-green-400">{sortedIns.length}</span>
         <span className="text-foreground/70"> / </span>
-        <span className="text-red-600 dark:text-red-400">{outs.length}</span>
+        <span className="text-red-600 dark:text-red-400">{sortedOuts.length}</span>
       </p>
-      {ins.length > 0 && (
+      {sortedIns.length > 0 && (
         <p className="flex items-start gap-x-1 text-s leading-[24px] text-muted-foreground">
           <ArrowRight
             size={16}
@@ -51,21 +54,21 @@ export function Card({ name, date, ins, outs, children = null, className }: Card
             aria-hidden
           />
           <span className="min-w-0 flex-nowrap items-baseline gap-1">
-            <span>{ins.join(", ")}</span>
+            <span>{sortedIns.join(", ")}</span>
             <Button
               type="button"
               variant="ghost"
               size="icon-xs"
               className="shrink-0 text-muted-foreground hover:text-foreground"
               aria-label="Copy incoming numbers"
-              onClick={() => void copyNumbers(ins.join(", "))}
+              onClick={() => void copyNumbers(sortedIns.join(", "))}
             >
               <Copy className="size-3" aria-hidden />
             </Button>
           </span>
         </p>
       )}
-      {outs.length > 0 && (
+      {sortedOuts.length > 0 && (
         <p className="flex items-start gap-x-1 text-s leading-[24px] text-muted-foreground">
           <ArrowLeft
             size={16}
@@ -73,14 +76,14 @@ export function Card({ name, date, ins, outs, children = null, className }: Card
             aria-hidden
           />
           <span className="min-w-0 flex-nowrap items-baseline gap-1">
-            <span>{outs.join(", ")}</span>
+            <span>{sortedOuts.join(", ")}</span>
             <Button
               type="button"
               variant="ghost"
               size="icon-xs"
               className="shrink-0 text-muted-foreground hover:text-foreground"
               aria-label="Copy outgoing numbers"
-              onClick={() => void copyNumbers(outs.join(", "))}
+              onClick={() => void copyNumbers(sortedOuts.join(", "))}
             >
               <Copy className="size-3" aria-hidden />
             </Button>
