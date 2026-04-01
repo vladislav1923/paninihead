@@ -4,12 +4,16 @@ import { CollectedSection } from "@/app/collections/[id]/CollectedSection";
 import { DealsSection, type DealWithExchanger } from "@/app/collections/[id]/DealsSection";
 import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
 import { Badge } from "@/lib/components/ui/badge";
+import { getCurrentUserId } from "@/lib/utilities/auth";
 import { db } from "@/lib/utilities/db";
 
 export default async function CollectionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const collection = await db.collections.findUnique({
-    where: { id },
+  const userId = await getCurrentUserId();
+  if (!userId) notFound();
+
+  const collection = await db.collections.findFirst({
+    where: { id, userId },
     include: {
       exchangers: {
         where: { deletedAt: null },

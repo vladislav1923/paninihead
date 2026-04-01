@@ -1,9 +1,15 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CollectionCard } from "@/lib/components/ui/CollectionCard";
+import { getCurrentUserId } from "@/lib/utilities/auth";
 import { db } from "@/lib/utilities/db";
 
 export default async function CollectionsPage() {
+  const userId = await getCurrentUserId();
+  if (!userId) redirect("/login");
+
   const collections = await db.collections.findMany({
+    where: { userId },
     orderBy: { createdAt: "desc" },
   });
 
