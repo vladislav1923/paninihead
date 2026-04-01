@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
+import { signUpAndLogin } from "./helpers/auth";
 
 test.describe("Collections List Page", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/collections");
+    await signUpAndLogin(page);
   });
 
   test("shows page heading", async ({ page }) => {

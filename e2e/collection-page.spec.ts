@@ -1,5 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
 import { nanoid } from "nanoid";
+import { loginWithCredentials, signUpAndLogin } from "./helpers/auth";
 
 /** Must match `playwright.config.ts` use.baseURL (origin only). */
 const E2E_ORIGIN = "http://127.0.0.1:3001";
@@ -38,14 +39,23 @@ test.describe.configure({ mode: "serial" });
 
 let collectionName: string;
 let collectionPageUrl: string;
+let authUsername: string;
+let authPassword: string;
 
 test.beforeAll(async ({ browser }) => {
   const context = await browser.newContext();
   const page = await context.newPage();
+  const auth = await signUpAndLogin(page);
+  authUsername = auth.username;
+  authPassword = auth.password;
   const created = await createCollectionAndOpenDetail(page);
   collectionName = created.name;
   collectionPageUrl = created.url;
   await context.close();
+});
+
+test.beforeEach(async ({ page }) => {
+  await loginWithCredentials(page, authUsername, authPassword);
 });
 
 test.describe("Collection page", () => {
@@ -207,6 +217,7 @@ test.describe("Collection deals", () => {
   test.beforeAll(async ({ browser }) => {
     const context = await browser.newContext();
     const page = await context.newPage();
+    await loginWithCredentials(page, authUsername, authPassword);
     await page.goto(collectionPageUrl);
     await addTwoOfSticker(page, 2);
     await context.close();
