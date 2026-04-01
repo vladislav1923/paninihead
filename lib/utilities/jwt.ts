@@ -1,4 +1,4 @@
-import { SignJWT } from "jose";
+import { jwtVerify, SignJWT } from "jose";
 
 const JWT_ALG = "HS256";
 const ONE_DAY_IN_SECONDS = 60 * 60 * 24;
@@ -19,6 +19,21 @@ export async function createUserToken(userId: string, username: string): Promise
     .setIssuedAt()
     .setExpirationTime(`${ONE_DAY_IN_SECONDS}s`)
     .sign(secret);
+}
+
+type TokenPayload = {
+  sub?: string;
+  username?: string;
+};
+
+export async function verifyUserToken(token: string): Promise<TokenPayload | null> {
+  try {
+    const secret = getJwtSecret();
+    const { payload } = await jwtVerify(token, secret, { algorithms: [JWT_ALG] });
+    return payload as TokenPayload;
+  } catch {
+    return null;
+  }
 }
 
 export const authCookieName = "auth_token";
