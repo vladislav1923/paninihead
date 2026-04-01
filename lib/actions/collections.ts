@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { CollectionStatus } from "@/generated/prisma/enums";
 import { createCollectionSchema } from "@/lib/schemas/collection";
-import { getCurrentUserId } from "@/lib/utilities/auth";
+import { getCurrentUser } from "@/lib/utilities/auth";
 import { db } from "@/lib/utilities/db";
 import { logger } from "@/lib/utilities/logger";
 import { validateFormSchema } from "@/lib/utilities/validation";
@@ -13,8 +13,8 @@ export type CreateCollectionResult = { ok: true } | { ok: false; errors: Record<
 export async function createCollection(raw: unknown): Promise<CreateCollectionResult> {
   try {
     logger.info("Create collection");
-    const userId = await getCurrentUserId();
-    if (!userId) return { ok: false, errors: { _: "Unauthorized" } };
+    const user = await getCurrentUser();
+    if (!user) return { ok: false, errors: { _: "Unauthorized" } };
 
     const result = validateFormSchema(createCollectionSchema, raw);
     if (!result.ok) return { ok: false, errors: result.errors };
@@ -32,7 +32,7 @@ export async function createCollection(raw: unknown): Promise<CreateCollectionRe
         imageUrl,
         total,
         collected: [],
-        userId,
+        userId: user.id,
       },
     });
 

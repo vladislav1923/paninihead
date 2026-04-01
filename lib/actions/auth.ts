@@ -106,3 +106,10 @@ export async function login(raw: unknown): Promise<AuthResult> {
     return { ok: false, errors: { _: "Failed to log in" } };
   }
 }
+
+export async function logout(): Promise<{ ok: true }> {
+  const cookieStore = await cookies();
+  cookieStore.delete(authCookieName);
+  logger.info("Logout success");
+  return { ok: true };
+}

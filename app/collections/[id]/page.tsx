@@ -4,16 +4,17 @@ import { CollectedSection } from "@/app/collections/[id]/CollectedSection";
 import { DealsSection, type DealWithExchanger } from "@/app/collections/[id]/DealsSection";
 import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
 import { Badge } from "@/lib/components/ui/badge";
-import { getCurrentUserId } from "@/lib/utilities/auth";
+import { UserSession } from "@/lib/components/ui/UserSession";
+import { getCurrentUser } from "@/lib/utilities/auth";
 import { db } from "@/lib/utilities/db";
 
 export default async function CollectionPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const userId = await getCurrentUserId();
-  if (!userId) notFound();
+  const user = await getCurrentUser();
+  if (!user) notFound();
 
   const collection = await db.collections.findFirst({
-    where: { id, userId },
+    where: { id, userId: user.id },
     include: {
       exchangers: {
         where: { deletedAt: null },
@@ -35,14 +36,17 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border px-6 py-4">
-        <nav className="flex items-center gap-4">
-          <Link
-            href="/collections"
-            className="inline-flex h-7 items-center justify-center rounded-lg px-2.5 text-[0.8rem] font-medium text-foreground transition-colors hover:bg-muted"
-          >
-            ← Back to collections
-          </Link>
-        </nav>
+        <div className="flex items-center justify-between gap-4">
+          <nav className="flex items-center gap-4">
+            <Link
+              href="/collections"
+              className="inline-flex h-7 items-center justify-center rounded-lg px-2.5 text-[0.8rem] font-medium text-foreground transition-colors hover:bg-muted"
+            >
+              ← Back to collections
+            </Link>
+          </nav>
+          <UserSession username={user.username} />
+        </div>
       </header>
 
       <main className="mx-auto max-w-[1240px] px-6 py-8">
