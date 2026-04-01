@@ -6,54 +6,47 @@ import { useRouter } from "next/navigation";
 import type { Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { signup } from "@/lib/actions/auth";
+import { login } from "@/lib/actions/auth";
 import { Button } from "@/lib/components/ui/button";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
 import {
   PASSWORD_MAX,
   PASSWORD_MIN,
-  type SignupFormValues,
+  type AuthFormValues,
   USERNAME_MAX,
   USERNAME_MIN,
-  signupSchema,
+  authSchema,
 } from "@/lib/schemas/auth";
 
-const defaultValues: SignupFormValues = {
+const defaultValues: AuthFormValues = {
   username: "",
   password: "",
-  passwordConfirmation: "",
 };
 
-export default function SignupPage() {
+export default function LoginPage() {
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-    reset,
-  } = useForm<SignupFormValues>({
-    resolver: yupResolver(signupSchema) as Resolver<SignupFormValues>,
+  } = useForm<AuthFormValues>({
+    resolver: yupResolver(authSchema) as Resolver<AuthFormValues>,
     defaultValues,
   });
 
-  const onSubmit = async (data: SignupFormValues) => {
+  const onSubmit = async (data: AuthFormValues) => {
     try {
-      const result = await signup({
-        username: data.username,
-        password: data.password,
-      });
-
+      const result = await login(data);
       if (result.ok) {
-        toast.success("Account created successfully.");
-        reset(defaultValues);
+        toast.success("Logged in successfully.");
         router.push("/collections");
         return;
       }
 
       for (const [field, message] of Object.entries(result.errors)) {
-        setError(field as keyof SignupFormValues, { message });
+        setError(field as keyof AuthFormValues, { message });
       }
       toast.error("Request failed. Please fix the errors and try again.");
     } catch {
@@ -75,7 +68,7 @@ export default function SignupPage() {
       </header>
 
       <main className="mx-auto max-w-md px-6 py-8">
-        <h1 className="mb-6 text-xl font-semibold text-foreground">Sign up</h1>
+        <h1 className="mb-6 text-xl font-semibold text-foreground">Log in</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
           <div className="flex flex-col gap-2">
             <Label htmlFor="username">
@@ -88,7 +81,7 @@ export default function SignupPage() {
               {...register("username")}
               minLength={USERNAME_MIN}
               maxLength={USERNAME_MAX}
-              placeholder="Choose a username"
+              placeholder="Your username"
               aria-invalid={!!errors.username}
               aria-describedby={errors.username ? "username-error" : undefined}
             />
@@ -106,11 +99,11 @@ export default function SignupPage() {
             <Input
               id="password"
               type="password"
-              autoComplete="new-password"
+              autoComplete="current-password"
               {...register("password")}
               minLength={PASSWORD_MIN}
               maxLength={PASSWORD_MAX}
-              placeholder="Create a password"
+              placeholder="Your password"
               aria-invalid={!!errors.password}
               aria-describedby={errors.password ? "password-error" : undefined}
             />
@@ -121,37 +114,15 @@ export default function SignupPage() {
             )}
           </div>
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="passwordConfirmation">
-              Confirm password <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="passwordConfirmation"
-              type="password"
-              autoComplete="new-password"
-              {...register("passwordConfirmation")}
-              minLength={PASSWORD_MIN}
-              maxLength={PASSWORD_MAX}
-              placeholder="Re-enter your password"
-              aria-invalid={!!errors.passwordConfirmation}
-              aria-describedby={errors.passwordConfirmation ? "passwordConfirmation-error" : undefined}
-            />
-            {errors.passwordConfirmation && (
-              <p id="passwordConfirmation-error" className="text-sm text-destructive" role="alert">
-                {errors.passwordConfirmation.message}
-              </p>
-            )}
-          </div>
-
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Creating account..." : "Create account"}
+            {isSubmitting ? "Logging in..." : "Log in"}
           </Button>
         </form>
 
         <p className="mt-6 text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Link href="/login" className="text-foreground underline underline-offset-4">
-            Log in
+          Do not have an account?{" "}
+          <Link href="/signup" className="text-foreground underline underline-offset-4">
+            Sign up
           </Link>
         </p>
       </main>
