@@ -20,3 +20,12 @@ export const authSchema = yup.object({
 });
 
 export type AuthFormValues = yup.InferType<typeof authSchema>;
+
+export const signupSchema = authSchema.shape({
+  passwordConfirmation: yup
+    .string()
+    .required("Password confirmation is required.")
+    .oneOf([yup.ref("password")], "Passwords must match."),
+});
+
+export type SignupFormValues = yup.InferType<typeof signupSchema>;
