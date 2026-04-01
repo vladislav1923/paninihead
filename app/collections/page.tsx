@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { UserSession } from "@/lib/components/ui/UserSession";
 import { CollectionCard } from "@/lib/components/ui/CollectionCard";
+import { UserSession } from "@/lib/components/ui/UserSession";
 import { getCurrentUser } from "@/lib/utilities/auth";
 import { db } from "@/lib/utilities/db";
 

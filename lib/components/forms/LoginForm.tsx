@@ -5,11 +5,11 @@ import { Button } from "@/lib/components/ui/button";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
 import {
+  type AuthFormValues,
   PASSWORD_MAX,
   PASSWORD_MIN,
   USERNAME_MAX,
   USERNAME_MIN,
-  type AuthFormValues,
 } from "@/lib/schemas/auth";
 
 type LoginFormProps = {

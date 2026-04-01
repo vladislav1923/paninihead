@@ -7,9 +7,9 @@ import { Label } from "@/lib/components/ui/label";
 import {
   PASSWORD_MAX,
   PASSWORD_MIN,
+  type SignupFormValues,
   USERNAME_MAX,
   USERNAME_MIN,
-  type SignupFormValues,
 } from "@/lib/schemas/auth";
 
 type SignupFormProps = {
