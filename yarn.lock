@@ -6816,7 +6816,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jose@npm:^6.0.6":
+"jose@npm:^6.0.6, jose@npm:^6.2.2":
   version: 6.2.2
   resolution: "jose@npm:6.2.2"
   checksum: 10c0/201f4776d77eccd339de99fb3ba940fdf03db15e64be7a99b511e53c232e3f3818e3f21b95223d62f99315a2ab76b4251cedd94e067de56893e45273a8d2151b
@@ -8200,6 +8200,7 @@ __metadata:
     eslint-config-next: "npm:16.1.6"
     jest: "npm:^30.3.0"
     jest-environment-jsdom: "npm:^30.3.0"
+    jose: "npm:^6.2.2"
     lucide-react: "npm:^0.577.0"
     nanoid: "npm:^5.1.7"
     next: "npm:16.1.6"

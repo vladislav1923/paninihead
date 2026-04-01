@@ -3,6 +3,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import type { Resolver } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,6 +27,7 @@ const defaultValues: AuthFormValues = {
 
 export default function LoginPage() {
   const router = useRouter();
+  const [formError, setFormError] = useState("");
   const {
     register,
     handleSubmit,
@@ -38,6 +40,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data: AuthFormValues) => {
     try {
+      setFormError("");
       const result = await login(data);
       if (result.ok) {
         toast.success("Logged in successfully.");
@@ -46,6 +49,10 @@ export default function LoginPage() {
       }
 
       for (const [field, message] of Object.entries(result.errors)) {
+        if (field === "_") {
+          setFormError(message);
+          continue;
+        }
         setError(field as keyof AuthFormValues, { message });
       }
       toast.error("Request failed. Please fix the errors and try again.");
@@ -70,6 +77,11 @@ export default function LoginPage() {
       <main className="mx-auto max-w-md px-6 py-8">
         <h1 className="mb-6 text-xl font-semibold text-foreground">Log in</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
+          {formError && (
+            <p className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {formError}
+            </p>
+          )}
           <div className="flex flex-col gap-2">
             <Label htmlFor="username">
               Username <span className="text-destructive">*</span>

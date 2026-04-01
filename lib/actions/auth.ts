@@ -1,8 +1,10 @@
 "use server";
 
 import { compare, hash } from "bcryptjs";
+import { cookies } from "next/headers";
 import { authSchema } from "@/lib/schemas/auth";
 import { db } from "@/lib/utilities/db";
+import { authCookieMaxAge, authCookieName, createUserToken } from "@/lib/utilities/jwt";
 import { logger } from "@/lib/utilities/logger";
 import { validateFormSchema } from "@/lib/utilities/validation";
 
@@ -79,6 +81,16 @@ export async function login(raw: unknown): Promise<AuthResult> {
     if (!isValidPassword) {
       return { ok: false, errors: { _: INVALID_CREDENTIALS_ERROR } };
     }
+
+    const token = await createUserToken(user.id, user.username);
+    const cookieStore = await cookies();
+    cookieStore.set(authCookieName, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: authCookieMaxAge,
+      path: "/",
+    });
 
     logger.info("Login success", { userId: user.id, username: user.username });
     return { ok: true, userId: user.id, username: user.username };
