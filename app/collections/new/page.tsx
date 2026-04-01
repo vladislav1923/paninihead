@@ -39,6 +39,10 @@ export default function NewCollectionPage() {
       }
 
       if (result) {
+        if (result.errors._ === "Unauthorized") {
+          router.push("/login");
+          return;
+        }
         for (const [field, message] of Object.entries(result.errors)) {
           setError(field as keyof CreateCollectionFormInput, { message });
         }

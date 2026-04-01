@@ -1,6 +1,7 @@
 "use client";
 
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createDeal } from "@/lib/actions/deals";
@@ -30,6 +31,7 @@ export function MakeDealForm({
   onSuccess,
   onCancel,
 }: MakeDealFormProps) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -53,6 +55,10 @@ export function MakeDealForm({
       if (result.ok) {
         onSuccess?.();
       } else {
+        if (result.errors._ === "Unauthorized") {
+          router.push("/login");
+          return;
+        }
         for (const [field, message] of Object.entries(result.errors)) {
           if (message) setError(field as keyof DealFormValues, { message });
         }

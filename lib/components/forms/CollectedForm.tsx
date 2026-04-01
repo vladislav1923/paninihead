@@ -1,6 +1,7 @@
 "use client";
 
 import { Minus, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { memo, useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { updateCollected } from "@/lib/actions/collections";
@@ -73,6 +74,7 @@ export function CollectedForm({
   initialCollected,
   onSaved,
 }: CollectedFormProps) {
+  const router = useRouter();
   const initialCounts = useMemo(() => collectedToCounts(initialCollected), [initialCollected]);
 
   const [counts, setCounts] = useState<Map<number, number>>(() => new Map(initialCounts));
@@ -128,14 +130,18 @@ export function CollectedForm({
   const handleSave = useCallback(async () => {
     setIsSaving(true);
     try {
-      await updateCollected(collectionId, collected, total);
+      const result = await updateCollected(collectionId, collected, total);
+      if (!result.ok && result.errors?._ === "Unauthorized") {
+        router.push("/login");
+        return;
+      }
       onSaved?.();
     } catch {
       toast.error("Failed to save. Please try again.");
     } finally {
       setIsSaving(false);
     }
-  }, [collectionId, collected, total, onSaved]);
+  }, [collectionId, collected, total, onSaved, router]);
 
   if (total < 1) return null;
 

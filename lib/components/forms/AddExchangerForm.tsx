@@ -1,6 +1,7 @@
 "use client";
 
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createExchanger, updateExchanger } from "@/lib/actions/exchangers";
@@ -36,6 +37,7 @@ export function AddExchangerForm({
   onSuccess,
   onCancel,
 }: AddExchangerFormProps) {
+  const router = useRouter();
   const formDefaultValues: AddExchangerFormValues = {
     ...emptyDefaultValues,
     ...defaultValuesProp,
@@ -63,6 +65,10 @@ export function AddExchangerForm({
         reset(formDefaultValues);
         onSuccess?.();
       } else {
+        if (result.errors._ === "Unauthorized") {
+          router.push("/login");
+          return;
+        }
         for (const [field, message] of Object.entries(result.errors)) {
           setError(field as keyof AddExchangerFormValues, { message });
         }

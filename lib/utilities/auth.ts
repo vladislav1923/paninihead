@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import { db } from "@/lib/utilities/db";
 import { authCookieName, verifyUserToken } from "@/lib/utilities/jwt";
 
 export type AuthUser = {
@@ -18,4 +19,16 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     id: payload.sub,
     username: payload.username,
   };
+}
+
+export async function canAccessCollection(collectionId: string): Promise<boolean> {
+  const user = await getCurrentUser();
+  if (!user) return false;
+
+  const collection = await db.collections.findFirst({
+    where: { id: collectionId, userId: user.id },
+    select: { id: true },
+  });
+
+  return !!collection;
 }
