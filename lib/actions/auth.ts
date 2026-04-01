@@ -15,6 +15,18 @@ type AuthResult =
 const PASSWORD_SALT_ROUNDS = 12;
 const INVALID_CREDENTIALS_ERROR = "Invalid username or password";
 
+async function setAuthCookie(userId: string, username: string) {
+  const token = await createUserToken(userId, username);
+  const cookieStore = await cookies();
+  cookieStore.set(authCookieName, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: authCookieMaxAge,
+    path: "/",
+  });
+}
+
 export async function signup(raw: unknown): Promise<AuthResult> {
   try {
     logger.info("Signup user");
@@ -44,6 +56,8 @@ export async function signup(raw: unknown): Promise<AuthResult> {
         username: true,
       },
     });
+
+    await setAuthCookie(user.id, user.username);
 
     logger.info("Signup success", { userId: user.id, username: user.username });
     return { ok: true, userId: user.id, username: user.username };
@@ -82,15 +96,7 @@ export async function login(raw: unknown): Promise<AuthResult> {
       return { ok: false, errors: { _: INVALID_CREDENTIALS_ERROR } };
     }
 
-    const token = await createUserToken(user.id, user.username);
-    const cookieStore = await cookies();
-    cookieStore.set(authCookieName, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: authCookieMaxAge,
-      path: "/",
-    });
+    await setAuthCookie(user.id, user.username);
 
     logger.info("Login success", { userId: user.id, username: user.username });
     return { ok: true, userId: user.id, username: user.username };
