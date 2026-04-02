@@ -13,4 +13,3 @@ export function Logo({ width = 96, height = 96 }: LogoProps) {
     </Link>
   );
 }
-

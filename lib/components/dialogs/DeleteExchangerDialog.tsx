@@ -41,7 +41,7 @@ export function DeleteExchangerDialog({
     } finally {
       setIsDeleting(false);
     }
-  }, [collectionId, exchangerId, onOpenChange, onSuccess]);
+  }, [collectionId, exchangerId, exchangerName, onOpenChange, onSuccess]);
 
   const handleCancel = useCallback(() => {
     if (!isDeleting) onOpenChange(false);

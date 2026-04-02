@@ -19,4 +19,3 @@ export function Header({ left, right }: HeaderProps) {
     </header>
   );
 }
-

@@ -41,7 +41,7 @@ export function RevertDealDialog({
     } finally {
       setIsReverting(false);
     }
-  }, [collectionId, dealId, onOpenChange, onSuccess]);
+  }, [collectionId, dealId, exchangerName, onOpenChange, onSuccess]);
 
   const handleCancel = useCallback(() => {
     if (!isReverting) onOpenChange(false);
