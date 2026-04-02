@@ -30,6 +30,7 @@ export function RevertDealDialog({
     try {
       const result = await revertDeal(collectionId, dealId);
       if (result.ok) {
+        toast.success(`Deal with ${exchangerName} reverted successfully.`);
         onOpenChange(false);
         onSuccess?.();
       } else {

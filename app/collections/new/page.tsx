@@ -35,6 +35,7 @@ export default function NewCollectionPage() {
     try {
       const result = await createCollection(data);
       if (result?.ok) {
+        toast.success(`Collection ${data.name} created successfully.`);
         router.push("/collections");
         return;
       }

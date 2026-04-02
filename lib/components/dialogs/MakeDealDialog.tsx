@@ -55,6 +55,7 @@ export function MakeDealDialog({
         <MakeDealForm
           collectionId={collectionId}
           exchangerId={exchanger.id}
+          exchangerName={exchanger.name}
           defaultIn={defaultIn}
           defaultOut={defaultOut}
           onSuccess={handleSuccess}

@@ -17,6 +17,7 @@ const textareaClassName =
 type MakeDealFormProps = {
   collectionId: string;
   exchangerId: string;
+  exchangerName?: string;
   defaultIn: string;
   defaultOut: string;
   onSuccess?: () => void;
@@ -26,6 +27,7 @@ type MakeDealFormProps = {
 export function MakeDealForm({
   collectionId,
   exchangerId,
+  exchangerName,
   defaultIn,
   defaultOut,
   onSuccess,
@@ -53,6 +55,11 @@ export function MakeDealForm({
     try {
       const result = await createDeal(collectionId, exchangerId, data);
       if (result.ok) {
+        toast.success(
+          exchangerName
+            ? `Deal with ${exchangerName} created successfully.`
+            : "Deal created successfully.",
+        );
         onSuccess?.();
       } else {
         if (result.errors._ === "Unauthorized") {

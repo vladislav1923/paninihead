@@ -30,6 +30,7 @@ export function DeleteExchangerDialog({
     try {
       const result = await deleteExchanger(collectionId, exchangerId);
       if (result.ok) {
+        toast.success(`Exchanger ${exchangerName} deleted successfully.`);
         onOpenChange(false);
         onSuccess?.();
       } else {

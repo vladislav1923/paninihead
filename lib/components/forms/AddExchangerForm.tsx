@@ -62,6 +62,11 @@ export function AddExchangerForm({
         ? await updateExchanger(collectionId, exchangerId, data)
         : await createExchanger(collectionId, data);
       if (result.ok) {
+        toast.success(
+          exchangerId
+            ? `Exchanger ${data.name} updated successfully.`
+            : `Exchanger ${data.name} created successfully.`,
+        );
         reset(formDefaultValues);
         onSuccess?.();
       } else {
