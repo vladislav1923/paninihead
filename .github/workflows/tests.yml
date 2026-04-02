@@ -49,6 +49,7 @@ jobs:
           - 5432:5432
     env:
       POSTGRES_URL: postgresql://user:password@localhost:5432/paninihead
+      AUTH_JWT_SECRET: ci-test-jwt-secret-change-me
     steps:
       - uses: actions/checkout@v4
 
