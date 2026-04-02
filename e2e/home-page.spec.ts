@@ -5,8 +5,8 @@ test.describe("Home Page", () => {
     await page.goto("/");
   });
 
-  test("shows primary heading", async ({ page }) => {
-    await expect(page.getByRole("heading", { level: 1, name: "PaniniHead" })).toBeVisible();
+  test("shows logo", async ({ page }) => {
+    await expect(page.getByRole("img", { name: "PaniniHead" })).toBeVisible();
   });
 
   test("shows tagline", async ({ page }) => {
@@ -21,7 +21,7 @@ test.describe("Home Page", () => {
 
   test("main content is in a main landmark", async ({ page }) => {
     await expect(page.getByRole("main")).toBeVisible();
-    await expect(page.getByRole("main").getByRole("heading", { name: "PaniniHead" })).toBeVisible();
+    await expect(page.getByRole("main").getByRole("img", { name: "PaniniHead" })).toBeVisible();
   });
 
   test("collections CTA is a link to /collections", async ({ page }) => {
