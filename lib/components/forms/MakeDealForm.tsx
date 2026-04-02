@@ -1,6 +1,7 @@
 "use client";
 
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createDeal } from "@/lib/actions/deals";
@@ -16,6 +17,7 @@ const textareaClassName =
 type MakeDealFormProps = {
   collectionId: string;
   exchangerId: string;
+  exchangerName?: string;
   defaultIn: string;
   defaultOut: string;
   onSuccess?: () => void;
@@ -25,11 +27,13 @@ type MakeDealFormProps = {
 export function MakeDealForm({
   collectionId,
   exchangerId,
+  exchangerName,
   defaultIn,
   defaultOut,
   onSuccess,
   onCancel,
 }: MakeDealFormProps) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -51,8 +55,17 @@ export function MakeDealForm({
     try {
       const result = await createDeal(collectionId, exchangerId, data);
       if (result.ok) {
+        toast.success(
+          exchangerName
+            ? `Deal with ${exchangerName} created successfully.`
+            : "Deal created successfully.",
+        );
         onSuccess?.();
       } else {
+        if (result.errors._ === "Unauthorized") {
+          router.push("/login");
+          return;
+        }
         for (const [field, message] of Object.entries(result.errors)) {
           if (message) setError(field as keyof DealFormValues, { message });
         }

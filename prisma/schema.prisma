@@ -23,8 +23,19 @@ enum DealStatus {
   Reverted
 }
 
+model Users {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  collections  Collections[]
+}
+
 model Collections {
   id          String       @id @default(cuid())
+  userId      String?
+  user        Users?       @relation(fields: [userId], references: [id], onDelete: SetNull)
   name        String
   status      CollectionStatus @default(InProgress)
   imageUrl    String?
@@ -34,6 +45,8 @@ model Collections {
   completedAt DateTime?
   exchangers  Exchangers[]
   deals       Deals[]
+
+  @@index([userId])
 }
 
 model Exchangers {

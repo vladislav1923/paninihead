@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { nanoid } from "nanoid";
+import { signUpAndLogin } from "./helpers/auth";
 
 test.describe("New collection page", () => {
   test.beforeEach(async ({ page }) => {
+    await signUpAndLogin(page);
     await page.goto("/collections/new");
   });
 

@@ -32,6 +32,6 @@ test.describe("Home Page", () => {
 
   test("navigates to collections when CTA is clicked", async ({ page }) => {
     await page.getByRole("link", { name: "Go To Collections" }).click();
-    await expect(page).toHaveURL(/\/collections\/?$/);
+    await expect(page).toHaveURL(/\/login\/?$/);
   });
 });

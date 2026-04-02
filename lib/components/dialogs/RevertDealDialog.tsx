@@ -30,6 +30,7 @@ export function RevertDealDialog({
     try {
       const result = await revertDeal(collectionId, dealId);
       if (result.ok) {
+        toast.success(`Deal with ${exchangerName} reverted successfully.`);
         onOpenChange(false);
         onSuccess?.();
       } else {
@@ -40,7 +41,7 @@ export function RevertDealDialog({
     } finally {
       setIsReverting(false);
     }
-  }, [collectionId, dealId, onOpenChange, onSuccess]);
+  }, [collectionId, dealId, exchangerName, onOpenChange, onSuccess]);
 
   const handleCancel = useCallback(() => {
     if (!isReverting) onOpenChange(false);

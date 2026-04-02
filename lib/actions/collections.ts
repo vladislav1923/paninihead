@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { CollectionStatus } from "@/generated/prisma/enums";
 import { createCollectionSchema } from "@/lib/schemas/collection";
+import { canAccessCollection, getCurrentUser } from "@/lib/utilities/auth";
 import { db } from "@/lib/utilities/db";
 import { logger } from "@/lib/utilities/logger";
 import { validateFormSchema } from "@/lib/utilities/validation";
@@ -12,6 +13,8 @@ export type CreateCollectionResult = { ok: true } | { ok: false; errors: Record<
 export async function createCollection(raw: unknown): Promise<CreateCollectionResult> {
   try {
     logger.info("Create collection");
+    const user = await getCurrentUser();
+    if (!user) return { ok: false, errors: { _: "Unauthorized" } };
 
     const result = validateFormSchema(createCollectionSchema, raw);
     if (!result.ok) return { ok: false, errors: result.errors };
@@ -29,6 +32,7 @@ export async function createCollection(raw: unknown): Promise<CreateCollectionRe
         imageUrl,
         total,
         collected: [],
+        userId: user.id,
       },
     });
 
@@ -47,6 +51,9 @@ export async function createCollection(raw: unknown): Promise<CreateCollectionRe
 export async function updateCollected(collectionId: string, collected: number[], total: number) {
   try {
     logger.info("Update collected in the collection", { collectionId, collected, total });
+    const hasAccess = await canAccessCollection(collectionId);
+    if (!hasAccess) return { ok: false, errors: { _: "Unauthorized" } };
+
     const isCompleted = collected.length === total;
     const status = isCompleted ? CollectionStatus.Completed : CollectionStatus.InProgress;
     const completedAt = isCompleted ? new Date() : null;

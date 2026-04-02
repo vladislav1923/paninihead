@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { addExchangerSchema } from "@/lib/schemas/exchanger";
+import { canAccessCollection } from "@/lib/utilities/auth";
 import { parseCommaSeparatedNumbers } from "@/lib/utilities/collected";
 import { db } from "@/lib/utilities/db";
 import { logger } from "@/lib/utilities/logger";
@@ -12,6 +13,8 @@ type Result = { ok: true } | { ok: false; errors: Record<string, string> };
 export async function createExchanger(collectionId: string, raw: unknown): Promise<Result> {
   try {
     logger.info("Create exchanger", { collectionId });
+    const hasAccess = await canAccessCollection(collectionId);
+    if (!hasAccess) return { ok: false, errors: { _: "Unauthorized" } };
 
     const validated = validateFormSchema(addExchangerSchema, raw);
     if (!validated.ok) return { ok: false, errors: validated.errors };
@@ -50,6 +53,8 @@ export async function updateExchanger(
 ): Promise<Result> {
   try {
     logger.info("Update exchanger", { collectionId, exchangerId });
+    const hasAccess = await canAccessCollection(collectionId);
+    if (!hasAccess) return { ok: false, errors: { _: "Unauthorized" } };
 
     const validated = validateFormSchema(addExchangerSchema, raw);
     if (!validated.ok) return { ok: false, errors: validated.errors };
@@ -85,6 +90,8 @@ export async function updateExchanger(
 export async function deleteExchanger(collectionId: string, exchangerId: string): Promise<Result> {
   try {
     logger.info("Delete exchanger", { collectionId, exchangerId });
+    const hasAccess = await canAccessCollection(collectionId);
+    if (!hasAccess) return { ok: false, errors: { _: "Unauthorized" } };
 
     await db.exchangers.update({
       where: { id: exchangerId, collectionId },

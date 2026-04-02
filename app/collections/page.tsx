@@ -1,17 +1,26 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { CollectionCard } from "@/lib/components/ui/CollectionCard";
+import { Header } from "@/lib/components/ui/Header";
+import { UserSession } from "@/lib/components/ui/UserSession";
+import { getCurrentUser } from "@/lib/utilities/auth";
 import { db } from "@/lib/utilities/db";
 
 export default async function CollectionsPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
   const collections = await db.collections.findMany({
+    where: { userId: user.id },
     orderBy: { createdAt: "desc" },
   });
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border px-6 py-4">
-        <h1 className="text-xl font-semibold text-foreground">Collections</h1>
-      </header>
+      <Header
+        left={<h1 className="text-xl font-semibold text-foreground">Collections</h1>}
+        right={<UserSession username={user.username} />}
+      />
 
       <main className="mx-auto max-w-4xl px-6 py-8">
         <div className="mb-8">

@@ -1,9 +1,10 @@
 # PaniniHead
-## A pet project to track your collections and make deals with exchangers
 
-[![Code Quality](https://github.com/vladislav1923/paninihead/actions/workflows/code-quality.yml/badge.svg)](https://github.com/vladislav1923/paninihead/actions/workflows/code-quality.yml)
+## A pet project to track your collections and make deals with other collectors
 
-[![Tests](https://github.com/vladislav1923/paninihead/actions/workflows/tests.yml/badge.svg)](https://github.com/vladislav1923/paninihead/actions/workflows/tests.yml)
+[Code Quality](https://github.com/vladislav1923/paninihead/actions/workflows/code-quality.yml)
+
+[Tests](https://github.com/vladislav1923/paninihead/actions/workflows/tests.yml)
 
 ### Start the database
 
@@ -23,16 +24,18 @@ Create a `.env.e2e` file in the project root (copy `env.e2e.example`) for runnin
 ### End-to-end tests
 
 1. Create `.env.e2e` by example
-1. `yarn db:start:e2e`
-2. `yarn test:e2e` or `yarn test:e2e:watch` in watch mode
+2. `yarn db:start:e2e`
+3. `yarn test:e2e` or `yarn test:e2e:watch` in watch mode
 
 ### Migrations
 
-| Task | Command |
-|------|--------|
-| Create a new migration (after changing `prisma/schema.prisma`) and apply it | `npx prisma migrate dev` |
+
+| Task                                                                        | Command                     |
+| --------------------------------------------------------------------------- | --------------------------- |
+| Create a new migration (after changing `prisma/schema.prisma`) and apply it | `npx prisma migrate dev`    |
 | Apply existing migrations only (e.g. in CI or after pulling new migrations) | `npx prisma migrate deploy` |
-| Check migration status | `npx prisma migrate status` |
+| Check migration status                                                      | `npx prisma migrate status` |
+
 
 Run `npx prisma migrate dev` when you change the schema; run `npx prisma migrate deploy` when you only need to run migrations that are already in the repo.
 

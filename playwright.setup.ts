@@ -25,7 +25,7 @@ export default async function globalSetup() {
 
   // clear e2e database for pure e2e testing
   try {
-    await client.query('TRUNCATE TABLE "Collections" CASCADE');
+    await client.query('TRUNCATE TABLE "Users", "Collections" CASCADE');
   } finally {
     await client.end();
   }

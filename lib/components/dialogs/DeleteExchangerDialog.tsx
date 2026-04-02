@@ -30,6 +30,7 @@ export function DeleteExchangerDialog({
     try {
       const result = await deleteExchanger(collectionId, exchangerId);
       if (result.ok) {
+        toast.success(`Exchanger ${exchangerName} deleted successfully.`);
         onOpenChange(false);
         onSuccess?.();
       } else {
@@ -40,7 +41,7 @@ export function DeleteExchangerDialog({
     } finally {
       setIsDeleting(false);
     }
-  }, [collectionId, exchangerId, onOpenChange, onSuccess]);
+  }, [collectionId, exchangerId, exchangerName, onOpenChange, onSuccess]);
 
   const handleCancel = useCallback(() => {
     if (!isDeleting) onOpenChange(false);

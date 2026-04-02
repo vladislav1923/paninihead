@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { CollectionStatus, DealStatus } from "@/generated/prisma/enums";
 import { dealFormSchema } from "@/lib/schemas/deal";
+import { canAccessCollection } from "@/lib/utilities/auth";
 import { parseCommaSeparatedNumbers } from "@/lib/utilities/collected";
 import { db } from "@/lib/utilities/db";
 import { logger } from "@/lib/utilities/logger";
@@ -17,6 +18,8 @@ export async function createDeal(
 ): Promise<Result> {
   try {
     logger.info("Create deal", { collectionId, exchangerId });
+    const hasAccess = await canAccessCollection(collectionId);
+    if (!hasAccess) return { ok: false, errors: { _: "Unauthorized" } };
 
     const result = validateFormSchema(dealFormSchema, raw);
     if (!result.ok) return { ok: false, errors: result.errors };
@@ -118,6 +121,8 @@ export async function createDeal(
 export async function revertDeal(collectionId: string, dealId: string): Promise<Result> {
   try {
     logger.info("Revert deal", { collectionId, dealId });
+    const hasAccess = await canAccessCollection(collectionId);
+    if (!hasAccess) return { ok: false, errors: { _: "Unauthorized" } };
 
     const deal = await db.deals.findFirst({
       where: { id: dealId, collectionId },
