@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CollectedSection } from "@/app/collections/[id]/CollectedSection";
 import { DealsSection, type DealWithExchanger } from "@/app/collections/[id]/DealsSection";
 import { ExchangersSection } from "@/app/collections/[id]/ExchangersSection";
+import { Header } from "@/lib/components/ui/Header";
 import { Badge } from "@/lib/components/ui/badge";
 import { UserSession } from "@/lib/components/ui/UserSession";
 import { getCurrentUser } from "@/lib/utilities/auth";
@@ -35,8 +36,8 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border px-6 py-4">
-        <div className="flex items-center justify-between gap-4">
+      <Header
+        left={
           <nav className="flex items-center gap-4">
             <Link
               href="/collections"
@@ -45,9 +46,9 @@ export default async function CollectionPage({ params }: { params: Promise<{ id:
               ← Back to collections
             </Link>
           </nav>
-          <UserSession username={user.username} />
-        </div>
-      </header>
+        }
+        right={<UserSession username={user.username} />}
+      />
 
       <main className="mx-auto max-w-[1240px] px-6 py-8">
         <div className="mb-6 flex flex-wrap items-center gap-2">

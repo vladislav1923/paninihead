@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createCollection } from "@/lib/actions/collections";
 import { CollectionForm } from "@/lib/components/forms/CollectionForm";
+import { Header } from "@/lib/components/ui/Header";
 import { Button } from "@/lib/components/ui/button";
 import type { CreateCollectionFormInput } from "@/lib/schemas/collection";
 import { createCollectionSchema } from "@/lib/schemas/collection";
@@ -60,16 +61,18 @@ export default function NewCollectionPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border px-6 py-4">
-        <nav className="flex items-center gap-4">
-          <Link
-            href="/collections"
-            className="inline-flex h-7 items-center justify-center rounded-lg px-2.5 text-[0.8rem] font-medium text-foreground transition-colors hover:bg-muted"
-          >
-            ← Back to collections
-          </Link>
-        </nav>
-      </header>
+      <Header
+        left={
+          <nav className="flex items-center gap-4">
+            <Link
+              href="/collections"
+              className="inline-flex h-7 items-center justify-center rounded-lg px-2.5 text-[0.8rem] font-medium text-foreground transition-colors hover:bg-muted"
+            >
+              ← Back to collections
+            </Link>
+          </nav>
+        }
+      />
 
       <main className="mx-auto max-w-2xl px-6 py-8">
         <h1 className="mb-6 text-xl font-semibold text-foreground">New collection</h1>

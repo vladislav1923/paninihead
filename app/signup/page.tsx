@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { signup } from "@/lib/actions/auth";
 import { SignupForm } from "@/lib/components/forms/SignupForm";
+import { Header } from "@/lib/components/ui/Header";
 import { type SignupFormValues, signupSchema } from "@/lib/schemas/auth";
 
 const defaultValues: SignupFormValues = {
@@ -54,16 +55,18 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border px-6 py-4">
-        <nav className="flex items-center gap-4">
-          <Link
-            href="/"
-            className="inline-flex h-7 items-center justify-center rounded-lg px-2.5 text-[0.8rem] font-medium text-foreground transition-colors hover:bg-muted"
-          >
-            ← Back home
-          </Link>
-        </nav>
-      </header>
+      <Header
+        left={
+          <nav className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="inline-flex h-7 items-center justify-center rounded-lg px-2.5 text-[0.8rem] font-medium text-foreground transition-colors hover:bg-muted"
+            >
+              ← Back home
+            </Link>
+          </nav>
+        }
+      />
 
       <main className="mx-auto max-w-md px-6 py-8">
         <h1 className="mb-6 text-xl font-semibold text-foreground">Sign up</h1>
