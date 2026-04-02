@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "db:start": "docker compose -f docker-compose.yml -f docker-compose.e2e.yml up -d",
+    "db:start:dev": "docker compose up -d",
     "db:start:e2e": "docker compose -f docker-compose.e2e.yml up -d db-e2e --wait",
     "db:stop": "docker compose -f docker-compose.yml -f docker-compose.e2e.yml down",
-    "db:start:dev": "docker compose up -d",
     "dev": "next dev",
     "build": "yarn typecheck && yarn lint && prisma generate && prisma migrate deploy && next build",
     "start": "next start",
